@@ -6,11 +6,11 @@ from scipy.special import softmax
 import pandas as pd
 
 class Game:
-	def __init__(self, player, opponent, color):
+	def __init__(self, player, opponent):
 		# Create new board
 		self.board = Board(color, BOARD_SIZE)
 		self.board.reset()
-		self.player_color = 2 if color == "black" else 1
+		self.player_color = None
 		self.player = player
 		self.opponent = opponent
 
@@ -43,9 +43,10 @@ class Game:
 		return state, reward, done, action
 
 
-	def play(self):
+	def play(self, color):
 		done = False
 		state = self.board.reset()
+		self.player_color = 2 if color == "black" else 1
 		datasetStates = []
 		datasetActions = []
 		datasetDone = []
@@ -73,6 +74,3 @@ class Game:
 			"Rewards": datasetRewards,
 			"Done": datasetDone })
 		return df
-
-
-
