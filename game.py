@@ -1,15 +1,14 @@
-import numpy as numpy
+import numpy as np
 from constants import *
 from go import GoEnv as Board
-from sys import maxint
+from sys import maxsize
 from scipy.special import softmax
 import pandas as pd
 
 class Game:
 	def __init__(self, player, opponent):
 		# Create new board
-		self.board = Board(color, BOARD_SIZE)
-		self.board.reset()
+		self.board = None
 		self.player_color = None
 		self.player = player
 		self.opponent = opponent
@@ -24,7 +23,7 @@ class Game:
 		legal_moves = board.get_legal_moves()
 		check = np.ones(BOARD_SIZE ** 2 + 1)
 		np.put(check, legal_moves, [0])
-		check = check * (-maxint - 1)
+		check = check * (-maxsize - 1)
 		newP = softmax(p + check)
 		move = np.random.choice(newP.shape[0], p=newP)
 		return move
@@ -38,19 +37,21 @@ class Game:
 		feature = player.feature(state)
 		p = player.policy(feature)
 		p = p[0].cpu().data.numpy()
-		action = self.move(state, p)
+		action = self.move(self.board, p)
 		state, reward, done = self.board.step(action)
 		return state, reward, done, action
 
 
 	def play(self, color):
 		done = False
+		self.board = Board(color, BOARD_SIZE)
 		state = self.board.reset()
 		self.player_color = 2 if color == "black" else 1
 		datasetStates = []
 		datasetActions = []
 		datasetDone = []
 		datasetRewards = []
+		comp = False
 
 		while not done:
 			if self.opponent:
@@ -60,9 +61,10 @@ class Game:
                     self.player, self.opponent.passed, competitive=True)
 			else:
 				state = self.getState(state)
-				new_state, reward, done, action = self._play(state, self.player, \
-                    False, competitive=comp)
+				new_state, reward, done, action = self.playOnce(state, self.player, \
+                    False)
 				self.swap()
+				state = new_state
 				datasetStates.append(state)
 				datasetActions.append(action)
 				datasetRewards.append(reward)

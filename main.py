@@ -4,10 +4,10 @@ from game import Game
 from agent import Player
 from constants import *
 import pandas as pd
-
+from tqdm import tqdm
 
 alphazero = Player()
-simulator = Game(alphazero, None, "white")
+simulator = Game(alphazero, None)
 
 dataset = pd.DataFrame({
 			"States": [],
@@ -15,7 +15,7 @@ dataset = pd.DataFrame({
 			"Rewards": [],
 			"Done": []})
 
-for i in range(GAMES):
+for i in tqdm(range(GAMES)):
 	color = "white" if i < GAMES/2 else "black"
 	df = simulator.play(color)
 

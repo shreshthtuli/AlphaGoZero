@@ -1,15 +1,15 @@
 import os
 from constants import *
 import torch.nn as nn
-import torch.nn.function as F
+import torch.nn.functional as F
 
 class BasicBlock(nn.Module):
 	def __init__(self):
 		super(BasicBlock, self).__init__()
-		self.conv1 = nn.Conve2d(FILTERS, FILTERS, kernel_size=3,
+		self.conv1 = nn.Conv2d(FILTERS, FILTERS, kernel_size=3,
 							stride=1, padding=1)
 		self.bn1 = nn.BatchNorm2d(FILTERS)
-		self.conv2 = nn.Conve2d(FILTERS, FILTERS, kernel_size=3,
+		self.conv2 = nn.Conv2d(FILTERS, FILTERS, kernel_size=3,
 							stride=1, padding=1)
 		self.bn2 = nn.BatchNorm2d(FILTERS)
 
@@ -22,16 +22,16 @@ class BasicBlock(nn.Module):
 		return out
 
 class Player(nn.Module):
-	def __init__(self):
-		super(Player, self).__init__()
-		# Feature Extractor
-		self.conv1 = nn.Conv2d(INPLANES, FILTERS, stride=1, 
+    def __init__(self):
+        super(Player, self).__init__()
+        # Feature Extractor
+        self.conv1 = nn.Conv2d(INPLANES, FILTERS, stride=1, 
 							kernel_size=KERNEL_SIZE, padding=1)
-		self.bn1 = nn.BatchNorm2d(FILTERS)
+        self.bn1 = nn.BatchNorm2d(FILTERS)
 
         for block in range(BLOCKS):
             setattr(self, "res{}".format(block), \
-                BasicBlock(outplanes, outplanes))
+				BasicBlock())
         # Policy Head
         self.convPolicy = nn.Conv2d(FILTERS, 2, kernel_size=1)
         self.bnPolicy = nn.BatchNorm2d(2)
