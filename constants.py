@@ -16,7 +16,7 @@ INPLANES = (HISTORY + 1) * 2 + 1
 POLICY_OUTPUT = BOARD_SIZE * BOARD_SIZE + 1
 
 # Number of filters
-FILTERS = 10
+FILTERS = 256
 
 # Kernel Size
 KERNEL_SIZE = 3
