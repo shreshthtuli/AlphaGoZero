@@ -1,6 +1,9 @@
 # Size of Go Board
 BOARD_SIZE = 13
 
+# Device
+DEVICE = torch.device("cuda") if CUDA else torch.device("cpu")
+
 # Number of Games to bw considered in state
 HISTORY = 7
 

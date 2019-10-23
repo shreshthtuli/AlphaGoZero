@@ -91,10 +91,8 @@ class GoEnv():
             move = _coord_to_action(self.board, pachi_move)
             if move != self.board_size ** 2 or self.test_move(move):
                 final_moves.append(move)
-        
-        if len(final_moves) == 0:
-            return [self.board_size ** 2]
 
+        final_moves.append(self.board_size ** 2)
         return final_moves
 
 

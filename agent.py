@@ -65,11 +65,4 @@ class Player(nn.Module):
     	x = F.relu(self.fcValue1(x))
     	v = F.tanh(self.fcValue2(x))
     	return v
-
-
-
-
-
-
-
 		
