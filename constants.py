@@ -25,4 +25,4 @@ KERNEL_SIZE = 3
 BLOCKS = 19
 
 # Number of games in self play
-GAMES = 10
+GAMES = 1

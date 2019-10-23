@@ -5,6 +5,8 @@ from sys import maxsize
 from scipy.special import softmax
 import pandas as pd
 
+np.set_printoptions(threshold=maxsize)
+
 class Game:
 	def __init__(self, player, opponent):
 		# Create new board
@@ -46,6 +48,7 @@ class Game:
 		done = False
 		self.board = Board(color, BOARD_SIZE)
 		state = self.board.reset()
+		print(state.shape)
 		self.player_color = 2 if color == "black" else 1
 		datasetStates = []
 		datasetActions = []

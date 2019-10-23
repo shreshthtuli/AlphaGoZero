@@ -19,6 +19,6 @@ for i in tqdm(range(GAMES)):
 	color = "white" if i < GAMES/2 else "black"
 	df = simulator.play(color)
 
-	dataset.append(df, ignore_index=True)
+	dataset = dataset.append(df)
 
 dataset.to_csv("data.csv")
