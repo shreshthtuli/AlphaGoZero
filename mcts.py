@@ -85,10 +85,12 @@ class MCTS():
 		total = np.sum(action_scores)
 		p = action_scores / total	
 		if competitive or self.numMoves >= 30:
-			moves = np.where(action_scores == np.max(action_scores))[0]
+			moves = np.array([child.move for child in self.root.children])
+			moves = moves[np.where(action_scores == np.max(action_scores))[0]]
 			move = np.random.choice(moves)	
 		else:
-			move = np.random.choice(action_scores.shape[0], p=p)
+			moves = [child.move for child in self.root.children]
+			move = np.random.choice(moves, p=p)
 		self.numMoves += 1
 		# Advance MCTS tree
 		for child in self.root.children:
@@ -98,7 +100,7 @@ class MCTS():
 		return move, p
 
 	def runSims(self, board, player):
-		for i in range(1600):
+		for i in range(MCTS_SIMS):
 			boardCopy = deepcopy(board)
 			current_node = self.root
 			done = False; depth = 0

@@ -46,7 +46,7 @@ def _format_state(history, player_color, board_size):
     BLACK = 1
     WHITE = 2
     """
-
+    # Generating board state here!
     state_history = np.concatenate((history[0], history[1]), axis=0)
     to_play = np.full((1, board_size, board_size), player_color - 1)
     final_state = np.concatenate((state_history, to_play), axis=0)
