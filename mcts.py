@@ -28,7 +28,7 @@ def sample_rotation(state, num=8):
         return np.array(states[0])
     return np.array(states)
 
- def constrainMoves(board, p):
+def constrainMoves(board, p):
  	legal_moves = board.get_legal_moves()
 	check = np.ones(BOARD_SIZE ** 2 + 1)
 	np.put(check, legal_moves, [0])
