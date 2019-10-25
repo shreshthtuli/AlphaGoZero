@@ -92,14 +92,14 @@ class MCTS():
 
 	def runSims(self, board, player):
 		for i in range(MCTS_SIMS):
-			boarcCopy = deepcopy(board)
+			boardCopy = deepcopy(board)
 			current_node = self.root
 			done = False
 			while not current_node.isLeaf() or not done:
 				child = self.select(current_node)
-				boarcCopy.step(child.move)
+				boardCopy.step(child.move)
 				current_node = child
-			v = expandAndEval(current_node, boarcCopy, player)
+			v = expandAndEval(current_node, boardCopy, player)
 			backup(current_node, v)
 
 	def select(self, node):
@@ -122,4 +122,3 @@ class MCTS():
 		while current_node.parent != None:
 			current_node.update(v)
 			current_node = current_node.parent
-
