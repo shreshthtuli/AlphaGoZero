@@ -76,9 +76,9 @@ class GoEnv():
     def _get_komi(self, board_size):
         """ Initialize a komi depending on the size of the board """
 
-        if 14 <= board_size <= 19:
+        if 13 <= board_size <= 19:
             return 7.5
-        elif 9 <= board_size <= 13:
+        elif 9 <= board_size <= 12:
             return 5.5
         return 0
     
@@ -130,11 +130,19 @@ class GoEnv():
 
     def reset(self):
         """ Reset the board """
-
+        colormap = {
+            'black': pachi_py.BLACK,
+            'white': pachi_py.WHITE,
+        }
+        self.player_color = colormap['white']
+        self.history = [np.zeros((HISTORY + 1, self.board_size, self.board_size)),
+                        np.zeros((HISTORY + 1, self.board_size, self.board_size))]
         self.board = pachi_py.CreateBoard(self.board_size)
         opponent_resigned = False
+        self.state = _format_state(self.history,
+                        self.player_color, self.board_size)
         self.done = self.board.is_terminal or opponent_resigned
-        return _format_state(self.history, self.player_color, self.board_size)
+        return self.state
 
 
     def render(self):

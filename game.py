@@ -8,10 +8,10 @@ import pandas as pd
 np.set_printoptions(threshold=maxsize)
 
 class Game:
-	def __init__(self, player, opponent):
+	def __init__(self, player, color='black', opponent=None):
 		# Create new board
-		self.board = None
-		self.player_color = None
+		self.board = Board(color, BOARD_SIZE)
+		self.player_color = 2 if color == "black" else 1
 		self.player = player
 		self.opponent = opponent
 
@@ -43,35 +43,41 @@ class Game:
 		state, reward, done = self.board.step(action)
 		return state, reward, done, action
 
-
-	def play(self, color):
+	def play(self, opFirst=False):
 		done = False
-		self.board = Board(color, BOARD_SIZE)
 		state = self.board.reset()
-		print(state.shape)
-		self.player_color = 2 if color == "black" else 1
+		# Black plays first
+		self.player_color = (1 if opFirst else 2) if self.opponent else 2
+		print("Player color", self.player_color)
 		datasetStates = []
 		datasetActions = []
 		datasetDone = []
 		datasetRewards = []
-		comp = False
+		comp = False; reward = None
 
+		if opFirst:
+			state, reward, done, action = self.playOnce(self.getState(state), \
+                    self.opponent, self.player.passed, competitive=True)
 		while not done:
 			if self.opponent:
 				state, reward, done, action = self.playOnce(self.getState(state), \
                     self.player, self.opponent.passed, competitive=True)
 				state, reward, done, action = self.playOnce(self.getState(state), \
-                    self.player, self.opponent.passed, competitive=True)
+                    self.opponent, self.player.passed, competitive=True)
 			else:
 				state = self.getState(state)
 				new_state, reward, done, action = self.playOnce(state, self.player, \
                     False)
+				datasetStates.append(state.data.numpy())
+				datasetActions.append(action)
+				datasetDone.append(done)
+				# Set rewards as if winner is white
+				datasetRewards.append(1 if self.player_color == 1 else -1)
 				self.swap()
 				state = new_state
-				datasetStates.append(state)
-				datasetActions.append(action)
-				datasetRewards.append(reward)
-				datasetDone.append(done)
+		# reward is 1 if white wins
+		print("Winner", 'white' if self.board.get_winner() == 1 else 'black')
+		datasetRewards = np.multiply(datasetRewards, -1 if reward != 1 else 1)
 
 		df = pd.DataFrame({
 			"States": datasetStates,

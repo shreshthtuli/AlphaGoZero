@@ -7,7 +7,7 @@ import pandas as pd
 from tqdm import tqdm
 
 alphazero = Player()
-simulator = Game(alphazero, None)
+simulator = Game(alphazero)
 
 dataset = pd.DataFrame({
 			"States": [],
@@ -16,8 +16,7 @@ dataset = pd.DataFrame({
 			"Done": []})
 
 for i in tqdm(range(GAMES)):
-	color = "white" if i < GAMES/2 else "black"
-	df = simulator.play(color)
+	df = simulator.play()
 
 	dataset = dataset.append(df)
 
