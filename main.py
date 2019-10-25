@@ -21,4 +21,4 @@ for i in tqdm(range(GAMES)):
 
 	dataset = dataset.append(df)
 
-dataset.to_csv("data.csv", sep=';')
+dataset.to_pickle('dataset.pkl')
