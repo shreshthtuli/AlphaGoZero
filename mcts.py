@@ -2,6 +2,8 @@ import numpy as np
 import random
 from constants import *
 from copy import deepcopy
+from sys import maxsize
+from scipy.special import softmax
 
 dh_group = [(None, None), ((np.rot90, 1), None), ((np.rot90, 2), None),
             ((np.rot90, 3), None), (np.fliplr, None), (np.flipud, None),
@@ -13,7 +15,7 @@ def sample_rotation(state, num=8):
     states = []
     boards = (HISTORY + 1) * 2 ## Number of planes to rotate
     for idx in range(num):
-        new_state = np.zeros((boards + 1, GOBAN_SIZE, GOBAN_SIZE,))
+        new_state = np.zeros((boards + 1, BOARD_SIZE, BOARD_SIZE,))
         new_state[:boards] = state[:boards]
         for grp in dh_group[idx]:
             for i in range(boards):
@@ -29,13 +31,18 @@ def sample_rotation(state, num=8):
     return np.array(states)
 
 def constrainMoves(board, p):
- 	legal_moves = board.get_legal_moves()
+	legal_moves = board.get_legal_moves()
 	check = np.ones(BOARD_SIZE ** 2 + 1)
 	np.put(check, legal_moves, [0])
 	check = check * (-maxsize - 1)
 	newP = softmax(p + check)
 	newP[np.where(check != 0)] = 0
 	return newP
+
+def getState(state):
+	x = torch.from_numpy(np.array([state]))
+	x = torch.tensor(x, dtype=torch.float, device=DEVICE)
+	return x
 
 class Node:
 	def __init__(self, parent=None, prob=None, move=None):
@@ -57,12 +64,12 @@ class Node:
 
 	def getU(self):
 		total = np.sum([sibling.n for sibling in self.parent.children])
-		return C_PUCT * self.prob * np.sqrt(total) / (1 + self.n)
+		return C_PUCT * self.p * np.sqrt(total) / (1 + self.n)
 
 	def expand(self, p):
 		for i in range(p.shape[0]):
 			if p[i] > 0:
-				self.children.append(parent=self, move=i, prob=p[i])
+				self.children.append(Node(parent=self, move=i, prob=p[i]))
 
 class MCTS():
 	def __init__(self):
@@ -71,36 +78,41 @@ class MCTS():
 
 	def play(self, board, player, competitive=False):
 		# Run another 1600 sims
-		runSims(board, player)
+		self.runSims(board, player)
 		# Find move
 		move, p = None, None
-		action_scores = [child.n for child in self.node.children]
+		action_scores = np.array([child.n for child in self.root.children])
 		total = np.sum(action_scores)
-        p = action_scores / total	
-		if competitive or self.Moves >= 30:
-            moves = np.where(action_scores == np.max(action_scores))[0]
-            move = np.random.choice(moves)	
-        else:
+		p = action_scores / total	
+		if competitive or self.numMoves >= 30:
+			moves = np.where(action_scores == np.max(action_scores))[0]
+			move = np.random.choice(moves)	
+		else:
 			move = np.random.choice(action_scores.shape[0], p=p)
-		self.moves += 1
+		self.numMoves += 1
 		# Advance MCTS tree
 		for child in self.root.children:
-            if child.move == move:
-                self.root = child
-                break
+			if child.move == move:
+				self.root = child
+				break
 		return move, p
 
 	def runSims(self, board, player):
-		for i in range(MCTS_SIMS):
+		for i in range(1600):
 			boardCopy = deepcopy(board)
 			current_node = self.root
-			done = False
-			while not current_node.isLeaf() or not done:
+			done = False; depth = 0
+			while not current_node.isLeaf() and not done:
 				child = self.select(current_node)
 				boardCopy.step(child.move)
+				# boardCopy.render()
+				# print("Move = ", child.move)
+				# print("Depth = ", depth)
+				# depth += 1
+				# input()
 				current_node = child
-			v = expandAndEval(current_node, boardCopy, player)
-			backup(current_node, v)
+			v = self.expandAndEval(current_node, boardCopy, player)
+			self.backup(current_node, v)
 
 	def select(self, node):
 		# select best child as per UCT algo
@@ -110,14 +122,16 @@ class MCTS():
 
 	def expandAndEval(self, node, board, player):
 		# expand as per NN then backup value
-		feature = player.feature(sample_rotation(state, num=1))
+		feature = player.feature(getState(sample_rotation(board.state, num=1)))
 		p = player.policy(feature)
 		v = player.value(feature)
-		p = constrainMoves(board, p)
+		# print("Policy\n", p)
+		p = constrainMoves(board, p[0].cpu().data.numpy())
+		# print("Constrained policy\n", p)
 		node.expand(p)
 		return v
 
-	def backup(self, node, v)
+	def backup(self, node, v):
 		current_node = node
 		while current_node.parent != None:
 			current_node.update(v)

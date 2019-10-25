@@ -12,6 +12,7 @@ simulator = Game(alphazero)
 dataset = pd.DataFrame({
 			"States": [],
 			"Actions": [],
+			"ActionScores": [],
 			"Rewards": [],
 			"Done": []})
 

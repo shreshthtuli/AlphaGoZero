@@ -1,5 +1,6 @@
 import os
 from constants import *
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
@@ -60,9 +61,9 @@ class Player(nn.Module):
     	return p
 
     def value(self, x):
-    	x = F.relu(self.bn(self.conv(x)))
+    	x = F.relu(self.bnValue(self.convValue(x)))
     	x = x.view(-1, BOARD_SIZE * BOARD_SIZE)
     	x = F.relu(self.fcValue1(x))
-    	v = F.tanh(self.fcValue2(x))
+    	v = torch.tanh(self.fcValue2(x))
     	return v
 		
