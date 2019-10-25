@@ -27,6 +27,7 @@ class Game:
 		np.put(check, legal_moves, [0])
 		check = check * (-maxsize - 1)
 		newP = softmax(p + check)
+		newP[np.where(check != 0)] = 0
 		move = np.random.choice(newP.shape[0], p=newP)
 		return move
 

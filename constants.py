@@ -26,3 +26,7 @@ BLOCKS = 19
 
 # Number of games in self play
 GAMES = 1
+
+# Number of MCTS simulations
+MCTS_SIMS = 1600
+C_PUCT = 0.2
