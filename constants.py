@@ -48,3 +48,7 @@ BATCH_SIZE_TRAIN = 20 # 2048
 
 # number of batches
 N_BATCHES = 1000
+
+# Path of best model
+BEST_PATH = "bestModel.pth"
+
