@@ -42,3 +42,6 @@ EVAL_GAMES = 400
 
 # Threshold to overwrite best player
 EVAL_THRESH = 0.55
+
+# batch size for training of policy+value network
+BATCH_SIZE_TRAIN = 2048

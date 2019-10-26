@@ -32,7 +32,7 @@ for i in tqdm(range(GAMES)):
 # print(evaluate(alphazero, alphazero))
 
 dataset.to_pickle('dataset.pkl')
-
+dataset.to_csv('dataset.csv')
 # train_data = dataset[:train_percentage*len(dataset)]
 # data_loader = torch.utils.data.DataLoader(train_data, ...)
 # train(data_loader, alphazero)
