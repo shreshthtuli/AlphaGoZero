@@ -1,11 +1,13 @@
 import time
 import os
+import pandas as pd
+from tqdm import tqdm
+
 from game import Game
 from agent import Player
 from constants import *
 from train import *
-import pandas as pd
-from tqdm import tqdm
+# from data import *
 
 alphazero = Player()
 simulator = Game(alphazero)
@@ -23,3 +25,7 @@ for i in tqdm(range(GAMES)):
 	dataset = dataset.append(df)
 
 dataset.to_pickle('dataset.pkl')
+
+# train_data = dataset[:train_percentage*len(dataset)]
+# data_loader = torch.utils.data.DataLoader(train_data, ...)
+# train(data_loader, alphazero)

@@ -5,6 +5,8 @@ import torch
 from torch.autograd import Variable
 
 from constants import *
+from model import *
+# from data import *
 
 def make_best_global_model(model):
 	pass
