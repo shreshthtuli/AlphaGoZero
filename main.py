@@ -3,6 +3,7 @@ import os
 from game import Game
 from agent import Player
 from constants import *
+from train import *
 import pandas as pd
 from tqdm import tqdm
 

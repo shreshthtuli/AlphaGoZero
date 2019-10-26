@@ -30,3 +30,9 @@ GAMES = 1
 # Number of MCTS simulations
 MCTS_SIMS = 10
 C_PUCT = 0.2
+
+# milestones for changing learning rate
+MILESTONES = [400, 600]
+
+# number of epochs to train
+NUM_EPOCHS = 10
