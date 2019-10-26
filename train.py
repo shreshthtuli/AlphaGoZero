@@ -58,9 +58,10 @@ def train(train_loader, model):
 			print(iter)
 			
 			if iter%1000 == 0:
-				score = evaluate(model)
-				if score > 0.55:
-					make_best_global_model(model)
+				return model
+				# score = evaluate(model)
+				# if score > 0.55:
+				# 	make_best_global_model(model)
 		
 		scheduler.step()
 		

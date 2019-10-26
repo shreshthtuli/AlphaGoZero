@@ -35,13 +35,13 @@ C_PUCT = 0.2
 MILESTONES = [400, 600]
 
 # number of epochs to train
-NUM_EPOCHS = 10
+NUM_EPOCHS = 10 # 1000
 
 # Evaluation Games
-EVAL_GAMES = 400
+EVAL_GAMES = 10 # 400
 
 # Threshold to overwrite best player
 EVAL_THRESH = 0.55
 
 # batch size for training of policy+value network
-BATCH_SIZE_TRAIN = 20
+BATCH_SIZE_TRAIN = 20 # 2048
