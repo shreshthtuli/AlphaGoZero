@@ -3,7 +3,7 @@ from torch.utils.data.dataset import Dataset
 class Position_Sampler(Dataset):
 	def __init__(self, df):
 		self.df = df
-		print(self.df["ActionScores"].iloc[2300])
+		# print(self.df["ActionScores"].iloc[200])
 		
 	def __len__(self):
 		return self.df.shape[0]
