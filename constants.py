@@ -16,19 +16,19 @@ INPLANES = (HISTORY + 1) * 2 + 1
 POLICY_OUTPUT = BOARD_SIZE * BOARD_SIZE + 1
 
 # Number of filters
-FILTERS = 10
+FILTERS = 256 # 256
 
 # Kernel Size
 KERNEL_SIZE = 3
 
 # Number of Residual Blocks
-BLOCKS = 19
+BLOCKS = 10 #19
 
 # Number of games in self play
-GAMES = 3
+GAMES = 5 # 25000
 
 # Number of MCTS simulations
-MCTS_SIMS = 5
+MCTS_SIMS = 20 # 1600
 C_PUCT = 0.2
 
 # milestones for changing learning rate

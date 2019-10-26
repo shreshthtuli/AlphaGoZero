@@ -57,6 +57,8 @@ class Game:
 	def play(self, opFirst=False):
 		done = False
 		state = self.board.reset()
+		if self.mctsEnable:
+			self.mcts = MCTS()
 		# Black plays first
 		self.player_color = (1 if opFirst else 2) if self.opponent else 2
 		print("Player color", self.player_color)
@@ -89,7 +91,7 @@ class Game:
 				datasetRewards.append(1 if self.player_color == 1 else -1)
 				self.swap()
 				state = new_state
-				print("."),
+
 		# reward is 1 if white wins
 		print("Winner", 'white' if self.board.get_winner() == 1 else 'black')
 
