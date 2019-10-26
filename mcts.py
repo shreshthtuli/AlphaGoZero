@@ -117,9 +117,10 @@ class MCTS():
 			self.backup(current_node, v)
 
 	def select(self, node):
-		# select best child as per UCT algo
+		# select best child as per UCT algo (if multiple best select randomly any)
 		scores = [child.q + child.getU() for child in node.children]
-		bestChild = node.children[np.argmax(scores)]
+		bestChildren = np.where(scores == np.max(scores))[0]
+		bestChild = node.children[np.random.choice(bestChildren)]
 		return bestChild
 
 	def expandAndEval(self, node, board, player):
@@ -131,7 +132,7 @@ class MCTS():
 		p = constrainMoves(board, p[0].cpu().data.numpy())
 		# print("Constrained policy\n", p)
 		node.expand(p)
-		return v
+		return v[0].cpu().data.numpy()
 
 	def backup(self, node, v):
 		current_node = node

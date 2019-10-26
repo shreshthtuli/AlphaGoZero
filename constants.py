@@ -16,7 +16,7 @@ INPLANES = (HISTORY + 1) * 2 + 1
 POLICY_OUTPUT = BOARD_SIZE * BOARD_SIZE + 1
 
 # Number of filters
-FILTERS = 20
+FILTERS = 10
 
 # Kernel Size
 KERNEL_SIZE = 3
@@ -25,10 +25,10 @@ KERNEL_SIZE = 3
 BLOCKS = 19
 
 # Number of games in self play
-GAMES = 1
+GAMES = 3
 
 # Number of MCTS simulations
-MCTS_SIMS = 10
+MCTS_SIMS = 5
 C_PUCT = 0.2
 
 # milestones for changing learning rate
@@ -36,3 +36,9 @@ MILESTONES = [400, 600]
 
 # number of epochs to train
 NUM_EPOCHS = 10
+
+# Evaluation Games
+EVAL_GAMES = 400
+
+# Threshold to overwrite best player
+EVAL_THRESH = 0.55

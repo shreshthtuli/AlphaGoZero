@@ -25,6 +25,7 @@ class BasicBlock(nn.Module):
 class Player(nn.Module):
     def __init__(self):
         super(Player, self).__init__()
+        self.passed = False
         # Feature Extractor
         self.conv1 = nn.Conv2d(INPLANES, FILTERS, stride=1, 
 							kernel_size=KERNEL_SIZE, padding=1)

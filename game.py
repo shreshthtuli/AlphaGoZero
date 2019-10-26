@@ -40,9 +40,9 @@ class Game:
 		x = torch.tensor(x, dtype=torch.float, device=DEVICE)
 		return x
 
-	def playOnce(self, state, player, other_pass):
+	def playOnce(self, state, player, other_pass, competitive=False):
 		if self.mctsEnable:
-			action, action_scores = self.mcts.play(self.board, self.player)
+			action, action_scores = self.mcts.play(self.board, self.player, competitive)
 			state, reward, done = self.board.step(action)
 		else:
 			feature = player.feature(state)
@@ -50,7 +50,7 @@ class Game:
 			p = p[0].cpu().data.numpy()
 			action = self.move(self.board, p)
 			state, reward, done = self.board.step(action)
-			action_scores = np.zeros((self.goban_size ** 2 + 1),)
+			action_scores = np.zeros((BOARD_SIZE ** 2 + 1),)
 			action_scores[action] = 1
 		return state, reward, done, action, action_scores
 
@@ -89,10 +89,16 @@ class Game:
 				datasetRewards.append(1 if self.player_color == 1 else -1)
 				self.swap()
 				state = new_state
+				print("."),
 		# reward is 1 if white wins
 		print("Winner", 'white' if self.board.get_winner() == 1 else 'black')
-		datasetRewards = np.multiply(datasetRewards, -1 if reward != 1 else 1)
 
+		if self.opponent:
+			if self.board.get_winner() == self.player_color :
+				return 1
+			return 0
+
+		datasetRewards = np.multiply(datasetRewards, -1 if reward != 1 else 1)
 		df = pd.DataFrame({
 			"States": datasetStates,
 			"Actions": datasetActions,
