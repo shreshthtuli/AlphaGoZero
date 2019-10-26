@@ -27,41 +27,36 @@ def train(train_loader, model):
 	criterion1 = nn.MSELoss()
 	
 	iter = 0
-	for epoch in range(NUM_EPOCHS):
-		print("epoch:", epoch)
-		for i, batch_data in enumerate(train_loader):
-			optimizer.zero_grad()
-			
-			states = batch_data['states'].float()
-			true_vals = batch_data['vals'].float()
-			true_probs = batch_data['probs'].float()
-			
-			## preprocessing here if needed depends on data loader
-			####
-			
-			states = Variable(states).cuda()
-			true_vals = Variable(true_vals).cuda()
-			true_probs = Variable(true_probs).cuda()
-			
-			f_map = model.feature(states)
-			pred_vals = model.value(f_map)
-			pred_probs = model.policy(f_map)
-			pred_vals = torch.squeeze(pred_vals)
-			mse_loss = criterion1(pred_vals, true_vals)
-			cross_entropy_loss = cross_entropy_mod(pred_probs, true_probs)
-			loss = 0.5*mse_loss + 0.5*cross_entropy_loss
-			loss.backward()
-			
-			optimizer.step()
-			
-			iter += 1
-			print(iter)
-			
-			if iter%1000 == 0:
-				return model
-				# score = evaluate(model)
-				# if score > 0.55:
-				# 	make_best_global_model(model)
+	for i, batch_data in enumerate(train_loader):
+		optimizer.zero_grad()
 		
+		states = batch_data['states'].float()
+		true_vals = batch_data['vals'].float()
+		true_probs = batch_data['probs'].float()
+		
+		## preprocessing here if needed depends on data loader
+		####
+		
+		states = Variable(states).to(DEVICE)
+		true_vals = Variable(true_vals).to(DEVICE)
+		true_probs = Variable(true_probs).to(DEVICE)
+		
+		f_map = model.feature(states)
+		pred_vals = model.value(f_map)
+		pred_probs = model.policy(f_map)
+		pred_vals = torch.squeeze(pred_vals)
+		mse_loss = criterion1(pred_vals, true_vals)
+		cross_entropy_loss = cross_entropy_mod(pred_probs, true_probs)
+		loss = 0.5*mse_loss + 0.5*cross_entropy_loss
+		loss.backward()
+		
+		optimizer.step()
+		
+		iter += 1
+		# print(iter)
+		
+		if iter == N_BATCHES:
+			return model
+			
 		scheduler.step()
 		
