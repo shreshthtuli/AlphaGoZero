@@ -7,7 +7,9 @@ from game import Game
 from agent import Player
 from constants import *
 from train import *
-from evaluator import *
+from sys import platform
+if platform == 'linux'
+	from evaluator import *
 # from data import *
 
 print(DEVICE)
