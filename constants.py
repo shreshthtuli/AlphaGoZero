@@ -45,3 +45,6 @@ EVAL_THRESH = 0.55
 
 # batch size for training of policy+value network
 BATCH_SIZE_TRAIN = 20 # 2048
+
+# Path of best model
+BEST_PATH = "bestModel.pth"
