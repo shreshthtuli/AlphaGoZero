@@ -34,9 +34,6 @@ C_PUCT = 0.2
 # milestones for changing learning rate
 MILESTONES = [400, 600]
 
-# number of epochs to train
-NUM_EPOCHS = 10 # 1000
-
 # Evaluation Games
 EVAL_GAMES = 10 # 400
 
@@ -47,7 +44,7 @@ EVAL_THRESH = 0.55
 BATCH_SIZE_TRAIN = 20 # 2048
 
 # number of batches
-N_BATCHES = 1000
+N_BATCHES = 10 # 1000
 
 # Path of best model
 BEST_PATH = "bestModel.pth"
