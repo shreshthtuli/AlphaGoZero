@@ -18,7 +18,7 @@ def evaluate(model):
 
 def train(train_loader, model):
 	model.train()
-	
+	savedLoss = []
 	epoch = 0
 	
 	optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=0.0001)
@@ -49,8 +49,10 @@ def train(train_loader, model):
 		cross_entropy_loss = cross_entropy_mod(pred_probs, true_probs)
 		loss = 0.5*mse_loss + 0.5*cross_entropy_loss
 		loss.backward()
+		if i % 10 == 0:
+			savedLoss.append(loss.data.numpy())
 
-		print(loss.data)
+		# print(loss.data.numpy())
 		
 		optimizer.step()
 		
@@ -58,7 +60,7 @@ def train(train_loader, model):
 		# print(iter)
 		
 		if iter == N_BATCHES:
-			return model
+			return model, savedLoss
 			
 		scheduler.step()
 		

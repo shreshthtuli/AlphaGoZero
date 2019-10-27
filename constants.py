@@ -16,35 +16,35 @@ INPLANES = (HISTORY + 1) * 2 + 1
 POLICY_OUTPUT = BOARD_SIZE * BOARD_SIZE + 1
 
 # Number of filters
-FILTERS = 2 # 256
+FILTERS = 256 # 256
 
 # Kernel Size
 KERNEL_SIZE = 3
 
 # Number of Residual Blocks
-BLOCKS = 3 #19
+BLOCKS = 13 #19
 
 # Number of games in self play
-GAMES = 1 # 25000
+GAMES = 4 # 25000
 
 # Number of MCTS simulations
-MCTS_SIMS = 20 # 1600
+MCTS_SIMS = 120 # 1600
 C_PUCT = 0.2
 
 # milestones for changing learning rate
-MILESTONES = [400, 600]
+MILESTONES = [40, 60] # 400, 600
 
 # Evaluation Games
-EVAL_GAMES = 1 # 400
+EVAL_GAMES = 3 # 400
 
 # Threshold to overwrite best player
 EVAL_THRESH = 0.55
 
 # batch size for training of policy+value network
-BATCH_SIZE_TRAIN = 20 # 2048 an 32 per worker
+BATCH_SIZE_TRAIN = 32 # 2048 an 32 per worker
 
 # number of batches
-N_BATCHES = 10 # 1000
+N_BATCHES = 100 # 1000
 
 # Path of best model
 BEST_PATH = "bestModel.pth"

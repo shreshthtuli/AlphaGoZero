@@ -1,7 +1,11 @@
 import time
 import os
 import pandas as pd
+import pickle
 from tqdm import tqdm
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Agg') 
 
 from agent import Player
 from constants import *
@@ -11,6 +15,8 @@ from agent import Player
 from data import *
 
 print(DEVICE)
+lossHistory = []
+fig = plt.figure()
 alphazero = Player().to(DEVICE)
 torch.save(alphazero, BEST_PATH)
 if platform == 'linux':
@@ -43,6 +49,10 @@ while True:
 																	 num_samples=BATCH_SIZE_TRAIN*N_BATCHES, replacement=True)
 	# print(list(sample_strategy))
 	data_loader = torch.utils.data.DataLoader(train_data, batch_size=BATCH_SIZE_TRAIN, sampler=sample_strategy)
-	alphazero = train(data_loader, alphazero)
+	alphazero, l = train(data_loader, alphazero)
+	lossHistory.extend(l)
+	fig.clf()
+	plt.plot(lossHistory)
+	fig.savefig("loss.pdf")
 	# Evaluate player
 	alphazero = evaluateAndSave(alphazero)
