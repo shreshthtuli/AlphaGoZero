@@ -25,7 +25,7 @@ KERNEL_SIZE = 3
 BLOCKS = 3 #19
 
 # Number of games in self play
-GAMES = 3 # 25000
+GAMES = 1 # 25000
 
 # Number of MCTS simulations
 MCTS_SIMS = 20 # 1600
@@ -35,13 +35,13 @@ C_PUCT = 0.2
 MILESTONES = [400, 600]
 
 # Evaluation Games
-EVAL_GAMES = 10 # 400
+EVAL_GAMES = 1 # 400
 
 # Threshold to overwrite best player
 EVAL_THRESH = 0.55
 
 # batch size for training of policy+value network
-BATCH_SIZE_TRAIN = 20 # 2048
+BATCH_SIZE_TRAIN = 20 # 2048 an 32 per worker
 
 # number of batches
 N_BATCHES = 10 # 1000

@@ -86,7 +86,7 @@ class Game:
 				datasetActions.append(action)
 				datasetDone.append(done)
 				datasetActionScores.append(action_scores)
-				# self.board.render(); input()
+				self.board.render()
 				# Set rewards as if winner is white
 				datasetRewards.append(1 if self.player_color == 1 else -1)
 				self.swap()

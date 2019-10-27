@@ -49,6 +49,8 @@ def train(train_loader, model):
 		cross_entropy_loss = cross_entropy_mod(pred_probs, true_probs)
 		loss = 0.5*mse_loss + 0.5*cross_entropy_loss
 		loss.backward()
+
+		print(loss.data)
 		
 		optimizer.step()
 		
