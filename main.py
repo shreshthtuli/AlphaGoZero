@@ -16,7 +16,7 @@ from sys import platform
 from agent import Player
 from data import *
 
-# num_cores = multiprocessing.cpu_count()
+num_cores = multiprocessing.cpu_count()
 num_cores = 2
 
 print(DEVICE, num_cores)
@@ -30,7 +30,7 @@ if platform == 'linux':
 	simulators = [Game(alphazero, mctsEnable=True) for c in range(num_cores)]
 
 def genGame(sim):
-	dataset = pd.DataFrame({
+	localdf = pd.DataFrame({
 				"States": [],
 				"Actions": [],
 				"ActionScores": [],
@@ -39,8 +39,8 @@ def genGame(sim):
 	sim.player = alphazero
 	for i in range(int(GAMES/num_cores)):
 		df = sim.play()
-		dataset.append(df)
-	return dataset
+		localdf = pd.concat([localdf, df])
+	return localdf
 
 startTime = time.time()
 while True:
@@ -57,9 +57,9 @@ while True:
 		dataset = pd.concat(results)
 
 	print("time:", time.time() - startTime)
-	exit(0)
-
+	
 	# dataset.to_pickle('dataset.pkl')
+	dataset.to_csv('dataset.csv')
 	# dataset = pd.read_pickle('dataset.pkl')
 
 	# Train player
