@@ -63,8 +63,7 @@ class Node:
 	def isLeaf(self):
 		return len(self.children) == 0
 
-	def getU(self):
-		total = np.sum([sibling.n for sibling in self.parent.children])
+	def getU(self, total):
 		return C_PUCT * self.p * np.sqrt(total) / (1 + self.n)
 
 	def expand(self, p):
@@ -103,11 +102,8 @@ class MCTS():
 		return move, return_scores
 
 	def runSims(self, board, player):
-		copyTime, simTime, expandTime, backupTime = 0, 0, 0, 0
 		for i in range(MCTS_SIMS):
-			t1 = time.time()
 			boardCopy = deepcopy(board)
-			t2 = time.time()
 			current_node = self.root
 			done = False; depth = 0
 			while not current_node.isLeaf() and not done:
@@ -119,20 +115,13 @@ class MCTS():
 				# depth += 1
 				# input()
 				current_node = child
-			t3 = time.time()
 			v = self.expandAndEval(current_node, boardCopy, player)
-			t4 = time.time()
 			self.backup(current_node, v)
-			t5 = time.time()
-			copyTime += t2 - t1
-			simTime += t3 - t2
-			expandTime += t4 - t3
-			backupTime += t5 - t4
-		print("Time: ", copyTime, simTime, expandTime, backupTime)
 
 	def select(self, node):
 		# select best child as per UCT algo (if multiple best select randomly any)
-		scores = [child.q + child.getU() for child in node.children]
+		total = np.sum([child.n for child in node.children])
+		scores = [child.q + child.getU(total) for child in node.children]
 		bestChildren = np.where(scores == np.max(scores))[0]
 		bestChild = node.children[np.random.choice(bestChildren)]
 		return bestChild

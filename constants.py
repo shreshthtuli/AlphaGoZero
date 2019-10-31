@@ -25,7 +25,8 @@ KERNEL_SIZE = 3
 BLOCKS = 3 #19
 
 # Number of games in self play
-GAMES = 1 # 25000
+GAMES = 4 # 25000
+TOTAL_GAMES = 20 * GAMES # 500k
 
 # Number of MCTS simulations
 MCTS_SIMS = 10 # 1600

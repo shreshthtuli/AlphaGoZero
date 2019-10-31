@@ -5,6 +5,8 @@ import pickle
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 import matplotlib
+import multiprocessing
+from joblib import Parallel, delayed
 matplotlib.use('Agg') 
 
 from agent import Player
@@ -14,7 +16,10 @@ from sys import platform
 from agent import Player
 from data import *
 
-print(DEVICE)
+# num_cores = multiprocessing.cpu_count()
+num_cores = 2
+
+print(DEVICE, num_cores)
 lossHistory = []
 fig = plt.figure()
 alphazero = Player().to(DEVICE)
@@ -22,23 +27,36 @@ torch.save(alphazero, BEST_PATH)
 if platform == 'linux':
 	from evaluator import *
 	from game import Game
-	simulator = Game(alphazero, mctsEnable=True)
+	simulators = [Game(alphazero, mctsEnable=True) for c in range(num_cores)]
 
+def genGame(sim):
+	dataset = pd.DataFrame({
+				"States": [],
+				"Actions": [],
+				"ActionScores": [],
+				"Rewards": [],
+				"Done": []})	
+	sim.player = alphazero
+	for i in range(int(GAMES/num_cores)):
+		df = sim.play()
+		dataset.append(df)
+	return dataset
+
+startTime = time.time()
 while True:
-	# New dataset
 	dataset = pd.DataFrame({
 				"States": [],
 				"Actions": [],
 				"ActionScores": [],
 				"Rewards": [],
 				"Done": []})
-	# Geneate dataset by self play
-	if platform == 'linux':
-		simulator.player = alphazero
-		for i in tqdm(range(GAMES)):
-			df = simulator.play()
-			dataset = dataset.append(df)
 
+	# Generate dataset by self play
+	if platform == 'linux':
+		results = Parallel(n_jobs=num_cores)(delayed(genGame)(s) for s in simulators)
+		dataset = pd.concat(results)
+
+	print("time:", time.time() - startTime)
 	exit(0)
 
 	# dataset.to_pickle('dataset.pkl')
