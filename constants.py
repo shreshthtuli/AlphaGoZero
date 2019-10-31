@@ -64,7 +64,7 @@ else:
 	BLOCKS = 13 #19
 
 	# Number of games in self play
-	GAMES = 80 # 25000
+	GAMES = 2 * NUM_CORES # 25000
 	TOTAL_GAMES = 20 * GAMES # 500k
 
 	# Number of MCTS simulations
@@ -74,7 +74,7 @@ else:
 	MILESTONES = [400, 600] # 400, 600
 
 	# Evaluation Games
-	EVAL_GAMES = 32 # 400
+	EVAL_GAMES = 2 * NUM_CORES # 400
 
 	# batch size for training of policy+value network
 	BATCH_SIZE_TRAIN = 32 # 2048 an 32 per worker
