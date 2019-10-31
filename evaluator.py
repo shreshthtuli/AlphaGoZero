@@ -10,7 +10,7 @@ def getRes(evaluator, opf):
 	return evaluator.play(opFirst = opf)
 
 def evaluateAndSave(model):
-	best_model = torch.load(BEST_PATH)
+	best_model = torch.load(BEST_PATH).to(DEVICE)
 	wins = 0
 	for evaluator in evaluators:
 		evaluator.player = model
