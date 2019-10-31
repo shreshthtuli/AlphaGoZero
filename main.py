@@ -3,11 +3,10 @@ import os
 import pandas as pd
 import pickle
 from tqdm import tqdm
-import matplotlib.pyplot as plt
 import matplotlib
-import multiprocessing
 from joblib import Parallel, delayed
 matplotlib.use('Agg') 
+import matplotlib.pyplot as plt
 
 from agent import Player
 from constants import *
@@ -16,7 +15,7 @@ from sys import platform
 from agent import Player
 from data import *
 
-num_cores = multiprocessing.cpu_count()
+num_cores = NUM_CORES
 num_cores = 2
 
 print(DEVICE, num_cores)
@@ -59,7 +58,7 @@ while True:
 	print("time:", time.time() - startTime)
 	
 	# dataset.to_pickle('dataset.pkl')
-	dataset.to_csv('dataset.csv')
+	# dataset.to_csv('dataset.csv')
 	# dataset = pd.read_pickle('dataset.pkl')
 
 	# Train player

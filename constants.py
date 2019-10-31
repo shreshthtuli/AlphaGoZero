@@ -2,6 +2,9 @@ import torch
 import multiprocessing
 num_cores = multiprocessing.cpu_count()
 
+# Number of cores
+NUM_CORES = num_cores
+
 # Size of Go Board
 BOARD_SIZE = 13
 
@@ -46,7 +49,7 @@ if num_cores < 10:
 	MILESTONES = [40, 60] # 400, 600
 
 	# Evaluation Games
-	EVAL_GAMES = 3 # 400
+	EVAL_GAMES = 4 # 400
 
 	# batch size for training of policy+value network
 	BATCH_SIZE_TRAIN = 32 # 2048 an 32 per worker
