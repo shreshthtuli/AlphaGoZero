@@ -10,23 +10,19 @@ dh_group = [(None, None), ((np.rot90, 1), None), ((np.rot90, 2), None),
             ((np.rot90, 3), None), (np.fliplr, None), (np.flipud, None),
             (np.flipud,  (np.rot90, 1)), (np.fliplr, (np.rot90, 1))]
 
-def sample_rotation(state, num=8):
+def sample_rotation(state):
     """ Apply a certain number of random transformation to the input state """
-    random.shuffle(dh_group)
     states = []
     boards = (HISTORY + 1) * 2 ## Number of planes to rotate
-    for idx in range(num):
-        new_state = np.zeros((boards + 1, BOARD_SIZE, BOARD_SIZE,))
-        new_state[:boards] = state[:boards]
-        for grp in dh_group[idx]:
-            for i in range(boards):
-                if isinstance(grp, tuple):
-                    new_state[i] = grp[0](new_state[i], k=grp[1])
-                elif grp is not None:
-                    new_state[i] = grp(new_state[i])
-
-        new_state[boards] = state[boards]
-        states.append(new_state)
+    dh = np.random.choice(dh_group)
+    new_state = np.copy(state)
+    for grp in dh:
+        for i in range(boards):
+            if isinstance(grp, tuple):
+                new_state[i] = grp[0](new_state[i], k=grp[1])
+            elif grp is not None:
+                new_state[i] = grp(new_state[i])
+    states.append(new_state)
     if len(states) == 1:
         return np.array(states[0])
     return np.array(states)
@@ -128,7 +124,7 @@ class MCTS():
 
 	def expandAndEval(self, node, board, player):
 		# expand as per NN then backup value
-		feature = player.feature(getState(sample_rotation(board.state, num=1)))
+		feature = player.feature(getState(sample_rotation(board.state)))
 		p = player.policy(feature)
 		v = player.value(feature)
 		# print("Policy\n", p)

@@ -16,7 +16,6 @@ from agent import Player
 from data import *
 
 num_cores = NUM_CORES
-num_cores = 2
 
 print(DEVICE, num_cores)
 lossHistory = []

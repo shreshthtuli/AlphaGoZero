@@ -1,9 +1,9 @@
 import torch
 import multiprocessing
-num_cores = multiprocessing.cpu_count()
+nmc = multiprocessing.cpu_count()
 
 # Number of cores
-NUM_CORES = num_cores
+NUM_CORES = nmc
 
 # Size of Go Board
 BOARD_SIZE = 13
@@ -31,7 +31,7 @@ BEST_PATH = "bestModel.pth"
 # Threshold to overwrite best player
 EVAL_THRESH = 0.55
 
-if num_cores < 10:
+if NUM_CORES < 10:
 	# Number of filters
 	FILTERS = 16 # 256
 

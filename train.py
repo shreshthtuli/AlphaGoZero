@@ -50,7 +50,7 @@ def train(train_loader, model):
 		loss = 0.5*mse_loss + 0.5*cross_entropy_loss
 		loss.backward()
 		if i % 10 == 0:
-			savedLoss.append(loss.data.numpy())
+			savedLoss.append(loss.data.cpu().numpy())
 
 		# print(loss.data.numpy())
 		
