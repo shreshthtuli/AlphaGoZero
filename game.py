@@ -85,7 +85,7 @@ class Game:
 			else:
 				new_state, reward, done, action,action_scores = self.playOnce(state, self.player, \
                     False)
-				datasetStates.append(state.data.cpu().numpy())
+				datasetStates.append([state])
 				datasetActions.append(action)
 				datasetDone.append(done)
 				datasetActionScores.append(action_scores)
