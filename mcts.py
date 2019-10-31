@@ -4,6 +4,7 @@ from constants import *
 from copy import deepcopy
 from sys import maxsize
 from scipy.special import softmax
+import time
 
 dh_group = [(None, None), ((np.rot90, 1), None), ((np.rot90, 2), None),
             ((np.rot90, 3), None), (np.fliplr, None), (np.flipud, None),
@@ -78,7 +79,9 @@ class MCTS():
 
 	def play(self, board, player, competitive=False):
 		# Run another 1600 sims
+		startTime = time.time()
 		self.runSims(board, player)
+		totalTime = time.time() - startTime
 		# Find move
 		move, p = None, None
 		action_scores = np.array([child.n for child in self.root.children])
@@ -99,7 +102,7 @@ class MCTS():
 			if child.move == move:
 				self.root = child
 				break
-		return move, return_scores
+		return move, return_scores, totalTime
 
 	def runSims(self, board, player):
 		for i in range(MCTS_SIMS):

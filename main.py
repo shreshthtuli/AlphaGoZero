@@ -39,6 +39,8 @@ while True:
 			df = simulator.play()
 			dataset = dataset.append(df)
 
+	exit(0)
+
 	# dataset.to_pickle('dataset.pkl')
 	# dataset = pd.read_pickle('dataset.pkl')
 
