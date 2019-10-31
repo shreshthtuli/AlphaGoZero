@@ -74,7 +74,7 @@ else:
 	MILESTONES = [400, 600] # 400, 600
 
 	# Evaluation Games
-	EVAL_GAMES = 40 # 400
+	EVAL_GAMES = 32 # 400
 
 	# batch size for training of policy+value network
 	BATCH_SIZE_TRAIN = 32 # 2048 an 32 per worker
