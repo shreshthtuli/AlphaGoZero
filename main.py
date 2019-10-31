@@ -52,8 +52,8 @@ while True:
 
 	# Generate dataset by self play
 	if platform == 'linux':
-		# results = Parallel(n_jobs=num_cores)(delayed(genGame)(s) for s in simulators)
-		results = [genGame(simulators[0])]
+		results = Parallel(n_jobs=num_cores)(delayed(genGame)(s) for s in simulators)
+		# results = [genGame(simulators[0])]
 		dataset = pd.concat(results)
 
 	print("time:", time.time() - startTime)
@@ -71,6 +71,7 @@ while True:
 	data_loader = torch.utils.data.DataLoader(train_data, batch_size=BATCH_SIZE_TRAIN, sampler=sample_strategy)
 	alphazero, l = train(data_loader, alphazero)
 	print("Training complete")
+	print("Loss", l[0])
 	lossHistory.extend(l)
 	fig.clf()
 	plt.plot(lossHistory)

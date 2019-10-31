@@ -49,7 +49,6 @@ class Game:
 		else:
 			state = self.getState(state)
 			feature = player.feature(state)
-			del state
 			p = player.policy(feature)
 			p = p[0].cpu().data.numpy()
 			action = self.move(self.board, p)
@@ -95,17 +94,6 @@ class Game:
 				datasetRewards.append(1 if self.player_color == 1 else -1)
 				self.swap()
 				state = new_state
-			num = 0
-			for obj in gc.get_objects():
-				try:
-					if (not ('nn' in str(type(obj)))) and (torch.is_tensor(obj) or (hasattr(obj, 'data') and torch.is_tensor(obj.data))):
-						print(type(obj), obj.size())
-						print(obj)
-						num += 1
-				except:
-					pass
-			print(num)
-			exit(0)
 		# reward is 1 if white wins
 		# print("Winner", 'white' if self.board.get_winner() == 1 else 'black')
 		if self.opponent:

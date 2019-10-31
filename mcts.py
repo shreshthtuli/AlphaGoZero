@@ -124,20 +124,13 @@ class MCTS():
 
 	def expandAndEval(self, node, board, player):
 		# expand as per NN then backup value
-		inp = getState(sample_rotation(board.state))
-		feature = player.feature(inp)
-		del inp
+		feature = player.feature(getState(sample_rotation(board.state)))
 		p = player.policy(feature)
 		v = player.value(feature)
-		del feature
 		# print("Policy\n", p)
-		p1 = constrainMoves(board, p[0].cpu().data.numpy())
-		del p
 		# print("Constrained policy\n", p)
-		node.expand(p1)
-		v1 = v[0].cpu().data.numpy()
-		del v
-		return v1
+		node.expand(constrainMoves(board, p[0].cpu().data.numpy()))
+		return v[0].cpu().data.numpy()
 
 	def backup(self, node, v):
 		current_node = node

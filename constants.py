@@ -3,7 +3,7 @@ import multiprocessing
 nmc = multiprocessing.cpu_count()
 
 # Number of cores
-NUM_CORES = nmc
+NUM_CORES = 32
 
 # Size of Go Board
 BOARD_SIZE = 13
@@ -46,7 +46,7 @@ if NUM_CORES < 10:
 	MCTS_SIMS = 10 # 1600
 
 	# milestones for changing learning rate
-	MILESTONES = [40, 60] # 400, 600
+	MILESTONES = [400, 600] # 400, 600
 
 	# Evaluation Games
 	EVAL_GAMES = 4 # 400
@@ -74,7 +74,7 @@ else:
 	MILESTONES = [400, 600] # 400, 600
 
 	# Evaluation Games
-	EVAL_GAMES = 2 * NUM_CORES # 400
+	EVAL_GAMES = 1 * NUM_CORES # 400
 
 	# batch size for training of policy+value network
 	BATCH_SIZE_TRAIN = 32 # 2048 an 32 per worker
