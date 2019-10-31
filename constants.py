@@ -1,9 +1,9 @@
 import torch
 import multiprocessing
-num_cores = multiprocessing.cpu_count()
+nmc = multiprocessing.cpu_count()
 
 # Number of cores
-NUM_CORES = num_cores
+NUM_CORES = nmc
 
 # Size of Go Board
 BOARD_SIZE = 13
