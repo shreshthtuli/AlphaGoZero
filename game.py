@@ -46,7 +46,9 @@ class Game:
 			action, action_scores = self.mcts.play(self.board, self.player, competitive)
 			state, reward, done = self.board.step(action)
 		else:
+			state = self.getState(state)
 			feature = player.feature(state)
+			del state
 			p = player.policy(feature)
 			p = p[0].cpu().data.numpy()
 			action = self.move(self.board, p)
@@ -81,7 +83,6 @@ class Game:
 				state, reward, done, action, _ = self.playOnce(self.getState(state), \
                     self.opponent, self.player.passed, competitive=True)
 			else:
-				state = self.getState(state)
 				new_state, reward, done, action,action_scores = self.playOnce(state, self.player, \
                     False)
 				datasetStates.append(state.data.cpu().numpy())

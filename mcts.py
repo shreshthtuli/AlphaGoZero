@@ -124,7 +124,9 @@ class MCTS():
 
 	def expandAndEval(self, node, board, player):
 		# expand as per NN then backup value
-		feature = player.feature(getState(sample_rotation(board.state)))
+		inp = getState(sample_rotation(board.state))
+		feature = player.feature(inp)
+		del inp
 		p = player.policy(feature)
 		v = player.value(feature)
 		# print("Policy\n", p)
