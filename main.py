@@ -68,9 +68,11 @@ while True:
 	# print(list(sample_strategy))
 	data_loader = torch.utils.data.DataLoader(train_data, batch_size=BATCH_SIZE_TRAIN, sampler=sample_strategy)
 	alphazero, l = train(data_loader, alphazero)
+	print("Training complete")
 	lossHistory.extend(l)
 	fig.clf()
 	plt.plot(lossHistory)
 	fig.savefig("loss.pdf")
 	# Evaluate player
 	alphazero = evaluateAndSave(alphazero)
+	print("Evaluation complete")
