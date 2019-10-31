@@ -40,7 +40,7 @@ if NUM_CORES < 10:
 
 	# Number of games in self play
 	GAMES = 4 # 25000
-	TOTAL_GAMES = 20 * GAMES # 500k
+	TOTAL_GAMES = 50000 # 500k
 
 	# Number of MCTS simulations
 	MCTS_SIMS = 10 # 1600
@@ -65,10 +65,10 @@ else:
 
 	# Number of games in self play
 	GAMES = 2 * NUM_CORES # 25000
-	TOTAL_GAMES = 20 * GAMES # 500k
+	TOTAL_GAMES = 50000 # 500k
 
 	# Number of MCTS simulations
-	MCTS_SIMS = 20 # 1600
+	MCTS_SIMS = 120 # 1600
 
 	# milestones for changing learning rate
 	MILESTONES = [400, 600] # 400, 600

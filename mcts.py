@@ -54,7 +54,7 @@ class Node:
 	def update(self, v):
 		self.n += 1
 		self.w = self.w + v
-		self.q = self.w / self.n if self.n > 0 else 0
+		self.q = self.w / self.n if self.n > 0 else maxsize
 
 	def isLeaf(self):
 		return len(self.children) == 0
