@@ -6,6 +6,7 @@ from mcts import MCTS
 from sys import maxsize
 from scipy.special import softmax
 import time 
+import gc
 
 np.set_printoptions(threshold=maxsize)
 
@@ -83,7 +84,7 @@ class Game:
 				state, reward, done, action, _ = self.playOnce(self.getState(state), \
                     self.opponent, self.player.passed, competitive=True)
 			else:
-				new_state, reward, done, action,action_scores = self.playOnce(state, self.player, \
+				new_state, reward, done, action, action_scores = self.playOnce(state, self.player, \
                     False)
 				datasetStates.append([state])
 				datasetActions.append(action)
@@ -94,6 +95,14 @@ class Game:
 				datasetRewards.append(1 if self.player_color == 1 else -1)
 				self.swap()
 				state = new_state
+			for obj in gc.get_objects():
+			    try:
+			        if (not ('nn' in str(type(obj)))) and (torch.is_tensor(obj) or (hasattr(obj, 'data') and torch.is_tensor(obj.data))):
+			            print(type(obj), obj.size())
+			            print(obj)
+			    except:
+			        pass
+			exit(0)
 
 
 		# reward is 1 if white wins

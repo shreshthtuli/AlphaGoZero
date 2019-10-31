@@ -129,11 +129,15 @@ class MCTS():
 		del inp
 		p = player.policy(feature)
 		v = player.value(feature)
+		del feature
 		# print("Policy\n", p)
-		p = constrainMoves(board, p[0].cpu().data.numpy())
+		p1 = constrainMoves(board, p[0].cpu().data.numpy())
+		del p
 		# print("Constrained policy\n", p)
-		node.expand(p)
-		return v[0].cpu().data.numpy()
+		node.expand(p1)
+		v1 = v[0].cpu().data.numpy()
+		del v
+		return v1
 
 	def backup(self, node, v):
 		current_node = node
