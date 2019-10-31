@@ -14,6 +14,7 @@ from train import *
 from sys import platform
 from agent import Player
 from data import *
+import gc
 
 num_cores = NUM_CORES
 
@@ -51,7 +52,8 @@ while True:
 
 	# Generate dataset by self play
 	if platform == 'linux':
-		results = Parallel(n_jobs=num_cores)(delayed(genGame)(s) for s in simulators)
+		# results = Parallel(n_jobs=num_cores)(delayed(genGame)(s) for s in simulators)
+		results = [genGame(simulators[0])]
 		dataset = pd.concat(results)
 
 	print("time:", time.time() - startTime)
