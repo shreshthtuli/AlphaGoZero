@@ -14,7 +14,7 @@ def sample_rotation(state):
     """ Apply a certain number of random transformation to the input state """
     states = []
     boards = (HISTORY + 1) * 2 ## Number of planes to rotate
-    dh = np.random.choice(dh_group)
+    dh = dh_group[np.random.choice([0, 1, 2, 3, 4, 5, 6, 7])]
     new_state = np.copy(state)
     for grp in dh:
         for i in range(boards):
