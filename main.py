@@ -14,6 +14,7 @@ from train import *
 from sys import platform
 from agent import Player
 from data import *
+import gc
 
 num_cores = NUM_CORES
 
