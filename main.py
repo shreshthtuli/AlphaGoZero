@@ -3,11 +3,10 @@ import os
 import pandas as pd
 import pickle
 from tqdm import tqdm
-import matplotlib.pyplot as plt
 import matplotlib
-import multiprocessing
 from joblib import Parallel, delayed
 matplotlib.use('Agg') 
+import matplotlib.pyplot as plt
 
 from agent import Player
 from constants import *
@@ -16,7 +15,7 @@ from sys import platform
 from agent import Player
 from data import *
 
-num_cores = multiprocessing.cpu_count()
+num_cores = NUM_CORES
 num_cores = 2
 
 print(DEVICE, num_cores)
@@ -52,15 +51,15 @@ while True:
 				"Done": []})
 
 	# Generate dataset by self play
-	if platform == 'linux':
-		results = Parallel(n_jobs=num_cores)(delayed(genGame)(s) for s in simulators)
-		dataset = pd.concat(results)
+	# if platform == 'linux':
+	# 	results = Parallel(n_jobs=num_cores)(delayed(genGame)(s) for s in simulators)
+	# 	dataset = pd.concat(results)
 
 	print("time:", time.time() - startTime)
 	
 	# dataset.to_pickle('dataset.pkl')
-	dataset.to_csv('dataset.csv')
-	# dataset = pd.read_pickle('dataset.pkl')
+	# dataset.to_csv('dataset.csv')
+	dataset = pd.read_pickle('dataset.pkl')
 
 	# Train player
 	train_data = Position_Sampler(dataset)
