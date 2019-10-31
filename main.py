@@ -51,15 +51,15 @@ while True:
 				"Done": []})
 
 	# Generate dataset by self play
-	# if platform == 'linux':
-	# 	results = Parallel(n_jobs=num_cores)(delayed(genGame)(s) for s in simulators)
-	# 	dataset = pd.concat(results)
+	if platform == 'linux':
+		results = Parallel(n_jobs=num_cores)(delayed(genGame)(s) for s in simulators)
+		dataset = pd.concat(results)
 
 	print("time:", time.time() - startTime)
 	
 	# dataset.to_pickle('dataset.pkl')
 	# dataset.to_csv('dataset.csv')
-	dataset = pd.read_pickle('dataset.pkl')
+	# dataset = pd.read_pickle('dataset.pkl')
 
 	# Train player
 	train_data = Position_Sampler(dataset)
