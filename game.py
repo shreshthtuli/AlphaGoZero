@@ -8,8 +8,6 @@ from scipy.special import softmax
 import time 
 
 np.set_printoptions(threshold=maxsize)
-mctsTime = 0
-simTime = 0
 
 class Game:
 	def __init__(self, player, mctsEnable=True, color='black', opponent=None):
@@ -44,12 +42,8 @@ class Game:
 		return x
 
 	def playOnce(self, state, player, other_pass, competitive=False):
-		global mctsTime, mctsTimeCounter, simTime
 		if self.mctsEnable:
-			mctsTimeCounter = time.time()
-			action, action_scores, sim = self.mcts.play(self.board, self.player, competitive)
-			mctsTime += time.time() - mctsTimeCounter
-			simTime += sim
+			action, action_scores = self.mcts.play(self.board, self.player, competitive)
 			state, reward, done = self.board.step(action)
 		else:
 			feature = player.feature(state)
@@ -62,7 +56,6 @@ class Game:
 		return state, reward, done, action, action_scores
 
 	def play(self, opFirst=False):
-		global mctsTime, simTime
 		done = False
 		state = self.board.reset()
 		if self.mctsEnable:
@@ -104,9 +97,6 @@ class Game:
 
 		# reward is 1 if white wins
 		print("Winner", 'white' if self.board.get_winner() == 1 else 'black')
-		endTime = time.time()
-		print("Total time: ", endTime - startTime)
-		print("Total MCTS time: ", mctsTime)
 		if self.opponent:
 			if self.board.get_winner() == self.player_color :
 				return 1
