@@ -59,7 +59,9 @@ while True:
 		dataset = pd.concat(results)
 		dataset = dataset[-1 * TOTAL_GAMES:]
 
+	print("Epoch count: ", numLoops)
 	print("time:", time.time() - startTime)
+	startTime = time.time()
 	
 	# dataset.to_pickle('dataset.pkl')
 	# dataset.to_csv('dataset.csv')
