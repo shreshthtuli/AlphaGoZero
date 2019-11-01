@@ -77,7 +77,7 @@ while True:
 	data_loader = torch.utils.data.DataLoader(train_data, batch_size=BATCH_SIZE_TRAIN, sampler=sample_strategy)
 	alphazero, vL, pL = train(data_loader, alphazero)
 	print("Training complete")
-	print("Value loss ", vL[0], ", Policy loss ", pL[0])
+	print("Value loss ", vL[-1], ", Policy loss ", pL[-1])
 	vHistory.extend(vL); pHistory.extend(pL)
 	fig.clf()
 	plt.plot(vHistory, 'k')
