@@ -29,14 +29,14 @@ C_PUCT = 0.2
 BEST_PATH = "bestModel.pth"
 
 # Threshold to overwrite best player
-EVAL_THRESH = 0.55
+EVAL_THRESH = 0.5
 
 if NUM_CORES < 10:
 	# Number of filters
-	FILTERS = 16 # 256
+	FILTERS = 32 # 256
 
 	# Number of Residual Blocks
-	BLOCKS = 3 #19
+	BLOCKS = 8 #19
 
 	# Number of games in self play
 	GAMES = 1 * NUM_CORES # 25000
@@ -68,7 +68,7 @@ else:
 	TOTAL_GAMES = 50000 # 500k
 
 	# Number of MCTS simulations
-	MCTS_SIMS = 170 # 1600
+	MCTS_SIMS = 20 # 1600
 
 	# milestones for changing learning rate
 	MILESTONES = [400, 600] # 400, 600

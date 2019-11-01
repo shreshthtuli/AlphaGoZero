@@ -50,23 +50,24 @@ def genGame(sim):
 
 startTime = time.time()
 numLoops = 0
-while True:
-	dataset = pd.DataFrame({
+
+dataset = pd.DataFrame({
 				"States": [],
 				"Actions": [],
 				"ActionScores": [],
 				"Rewards": [],
 				"Done": []})
 
+while True:
 	# Generate dataset by self play
 	if platform == 'linux':
 		results = Parallel(n_jobs=num_cores)(delayed(genGame)(s) for s in simulators)
-		results.append(dataset)
 		# results = [genGame(simulators[0])]
-		dataset = pd.concat(results)
+		dataset = dataset.append(pd.concat(results, ignore_index=True), ignore_index=True)
 		dataset = dataset[-1 * TOTAL_GAMES:]
 
 	print("Epoch count: ", numLoops)
+	print("Dataset size: ", dataset.shape)
 	print("time:", time.time() - startTime)
 	startTime = time.time()
 	
@@ -92,7 +93,6 @@ while True:
 	fig.savefig("loss.pdf")
 	# Evaluate player
 	if numLoops > 15:
-		MCTS_SIMS = min(50, 5 + numLoops)
 		alphazero = evaluateAndSave(alphazero)
 		print("Evaluation complete")
 	numLoops += 1
