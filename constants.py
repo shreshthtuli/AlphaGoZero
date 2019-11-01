@@ -3,7 +3,7 @@ import multiprocessing
 nmc = multiprocessing.cpu_count()
 
 # Number of cores
-NUM_CORES = 16
+NUM_CORES = 4
 
 # Size of Go Board
 BOARD_SIZE = 13
@@ -29,17 +29,17 @@ C_PUCT = 0.2
 BEST_PATH = "bestModel.pth"
 
 # Threshold to overwrite best player
-EVAL_THRESH = 0.55
+EVAL_THRESH = 0.5
 
 if NUM_CORES < 10:
 	# Number of filters
-	FILTERS = 16 # 256
+	FILTERS = 32 # 256
 
 	# Number of Residual Blocks
-	BLOCKS = 3 #19
+	BLOCKS = 8 #19
 
 	# Number of games in self play
-	GAMES = 4 # 25000
+	GAMES = 1 * NUM_CORES # 25000
 	TOTAL_GAMES = 50000 # 500k
 
 	# Number of MCTS simulations
@@ -49,13 +49,13 @@ if NUM_CORES < 10:
 	MILESTONES = [400, 600] # 400, 600
 
 	# Evaluation Games
-	EVAL_GAMES = 4 # 400
+	EVAL_GAMES = 2 * NUM_CORES # 400
 
 	# batch size for training of policy+value network
-	BATCH_SIZE_TRAIN = 32 # 2048 an 32 per worker
+	BATCH_SIZE_TRAIN = 64 # 2048 an 32 per worker
 
 	# number of batches
-	N_BATCHES = 100 # 1000
+	N_BATCHES = 1000 # 1000
 else:
 	# Number of filters
 	FILTERS = 256 # 256
@@ -68,7 +68,7 @@ else:
 	TOTAL_GAMES = 50000 # 500k
 
 	# Number of MCTS simulations
-	MCTS_SIMS = 5 # 1600
+	MCTS_SIMS = 20 # 1600
 
 	# milestones for changing learning rate
 	MILESTONES = [400, 600] # 400, 600

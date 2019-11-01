@@ -44,7 +44,7 @@ class Game:
 
 	def playOnce(self, state, player, other_pass, competitive=False):
 		if self.mctsEnable:
-			action, action_scores = self.mcts.play(self.board, self.player, competitive)
+			action, action_scores = self.mcts.play(self.board, player, competitive)
 			state, reward, done = self.board.step(action)
 		else:
 			state = self.getState(state)
@@ -64,14 +64,14 @@ class Game:
 			self.mcts = MCTS()
 		# Black plays first
 		self.player_color = (1 if opFirst else 2) if self.opponent else 2
-		print("Player color", self.player_color)
+		# print("Player color", self.player_color)
 		datasetStates = []
 		datasetActions = []
 		datasetDone = []
 		datasetRewards = []
 		datasetActionScores = []
 		comp = False; reward = None
-		startTime = time.time()
+		# startTime = time.time()
 
 		if opFirst:
 			state, reward, done, action, _ = self.playOnce(self.getState(state), \

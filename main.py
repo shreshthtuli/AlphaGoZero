@@ -21,7 +21,13 @@ num_cores = NUM_CORES
 print(DEVICE, num_cores)
 vHistory = []
 pHistory = []
-fig = plt.figure()
+fig, ax1 = plt.subplots()
+ax1.set_xlabel('iterations * 100')
+ax1.set_ylabel('Value Loss', color='tab:red')
+ax1.tick_params(axis='y', labelcolor='tab:red')
+ax2 = ax1.twinx()
+ax2.set_ylabel('Policy Loss', color='tab:blue')
+ax2.tick_params(axis='y', labelcolor='tab:blue')
 alphazero = Player().to(DEVICE)
 torch.save(alphazero, BEST_PATH)
 if platform == 'linux':
@@ -44,23 +50,24 @@ def genGame(sim):
 
 startTime = time.time()
 numLoops = 0
-while True:
-	dataset = pd.DataFrame({
+
+dataset = pd.DataFrame({
 				"States": [],
 				"Actions": [],
 				"ActionScores": [],
 				"Rewards": [],
 				"Done": []})
 
+while True:
 	# Generate dataset by self play
 	if platform == 'linux':
 		results = Parallel(n_jobs=num_cores)(delayed(genGame)(s) for s in simulators)
-		results.append(dataset)
 		# results = [genGame(simulators[0])]
-		dataset = pd.concat(results)
+		dataset = dataset.append(pd.concat(results, ignore_index=True), ignore_index=True)
 		dataset = dataset[-1 * TOTAL_GAMES:]
 
 	print("Epoch count: ", numLoops)
+	print("Dataset size: ", dataset.shape)
 	print("time:", time.time() - startTime)
 	startTime = time.time()
 	
@@ -79,13 +86,13 @@ while True:
 	print("Training complete")
 	print("Value loss ", vL[-1], ", Policy loss ", pL[-1])
 	vHistory.extend(vL); pHistory.extend(pL)
-	fig.clf()
-	plt.plot(vHistory, 'k')
-	plt.plot(pHistory, 'r')
+	ax1.cla(); ax2.cla()
+	ax1.plot(range(len(vHistory)), vHistory, 'r')
+	ax2.plot(range(len(vHistory)), pHistory, 'b')
+	fig.tight_layout()
 	fig.savefig("loss.pdf")
 	# Evaluate player
-	if numLoops > 10:
-		MCTS_SIMS = min(50, 5 + numLoops)
+	if numLoops > 15:
 		alphazero = evaluateAndSave(alphazero)
 		print("Evaluation complete")
 	numLoops += 1

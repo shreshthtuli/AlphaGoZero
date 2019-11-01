@@ -23,6 +23,8 @@ def evaluateAndSave(model):
 	wins = np.sum(results)
 	updateModel = wins >= EVAL_THRESH * EVAL_GAMES
 	if updateModel:
+		print("Current model = best")
 		torch.save(model, BEST_PATH)
 		return model
+	print("Current model is not best")
 	return best_model
