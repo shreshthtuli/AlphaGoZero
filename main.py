@@ -20,7 +20,7 @@ num_cores = NUM_CORES
 
 print(DEVICE, num_cores)
 vHistory = []
-pHistory
+pHistory = []
 fig = plt.figure()
 alphazero = Player().to(DEVICE)
 torch.save(alphazero, BEST_PATH)
