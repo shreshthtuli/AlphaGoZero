@@ -19,7 +19,8 @@ import gc
 num_cores = NUM_CORES
 
 print(DEVICE, num_cores)
-lossHistory = []
+vHistory = []
+pHistory
 fig = plt.figure()
 alphazero = Player().to(DEVICE)
 torch.save(alphazero, BEST_PATH)
@@ -74,12 +75,13 @@ while True:
 																	 num_samples=BATCH_SIZE_TRAIN*N_BATCHES, replacement=True)
 	# print(list(sample_strategy))
 	data_loader = torch.utils.data.DataLoader(train_data, batch_size=BATCH_SIZE_TRAIN, sampler=sample_strategy)
-	alphazero, l = train(data_loader, alphazero)
+	alphazero, vL, pL = train(data_loader, alphazero)
 	print("Training complete")
-	print("Loss", l[0])
-	lossHistory.extend(l)
+	print("Value loss ", vL[0], ", Policy loss ", pL[0])
+	vHistory.extend(vL); pHistory.extend(pL)
 	fig.clf()
-	plt.plot(lossHistory)
+	plt.plot(vHistory, 'k')
+	plt.plot(pHistory, 'r')
 	fig.savefig("loss.pdf")
 	# Evaluate player
 	if numLoops > 10:

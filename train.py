@@ -18,7 +18,8 @@ def evaluate(model):
 
 def train(train_loader, model):
 	model.train()
-	savedLoss = []
+	valueLoss = []
+	policyLoss = []
 	epoch = 0
 	
 	optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=0.0001)
@@ -50,7 +51,8 @@ def train(train_loader, model):
 		loss = 0.5*mse_loss + 0.5*cross_entropy_loss
 		loss.backward()
 		if i % 10 == 0:
-			savedLoss.append(loss.data.cpu().numpy())
+			valueLoss.append(mse_loss.data.cpu().numpy())
+			policyLoss.append(cross_entropy_loss.data.cpu().numpy())
 
 		# print(loss.data.numpy())
 		
@@ -60,7 +62,7 @@ def train(train_loader, model):
 		# print(iter)
 		
 		if iter == N_BATCHES:
-			return model, savedLoss
+			return model, valueLoss, policyLoss
 			
 		scheduler.step()
 		
