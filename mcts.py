@@ -54,7 +54,7 @@ class Node:
 	def update(self, v):
 		self.n += 1
 		self.w = self.w + v
-		self.q = self.w / self.n if self.n > 0 else maxsize
+		self.q = self.w / self.n
 
 	def isLeaf(self):
 		return len(self.children) == 0
@@ -105,6 +105,7 @@ class MCTS():
 			while not current_node.isLeaf() and not done:
 				child = self.select(current_node)
 				boardCopy.step(child.move)
+				# print(boardCopy.state)
 				# boardCopy.render()
 				# print("Move = ", child.move)
 				# print("Depth = ", depth)
@@ -112,6 +113,8 @@ class MCTS():
 				# input()
 				current_node = child
 			v = self.expandAndEval(current_node, boardCopy, player)
+			# print(boardCopy.state)
+			# print("Backup value: ", v)
 			self.backup(current_node, v)
 
 	def select(self, node):

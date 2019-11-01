@@ -134,7 +134,7 @@ class GoEnv():
             'black': pachi_py.BLACK,
             'white': pachi_py.WHITE,
         }
-        self.player_color = colormap['white']
+        self.player_color = colormap['black']
         self.history = [np.zeros((HISTORY + 1, self.board_size, self.board_size)),
                         np.zeros((HISTORY + 1, self.board_size, self.board_size))]
         self.board = pachi_py.CreateBoard(self.board_size)
@@ -175,11 +175,12 @@ class GoEnv():
                 self._act(action, self.history)
             except pachi_py.IllegalMove:
                 six.reraise(*sys.exc_info())
+        self.state = _format_state(self.history,
+                        self.player_color, self.board_size)
 
         # Reward: if nonterminal, then the reward is -1
         if not self.board.is_terminal:
-            return _format_state(self.history, self.player_color, self.board_size), \
-                    -1, False
+            return self.state, -1, False
 
         assert self.board.is_terminal
         self.done = True
