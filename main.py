@@ -19,7 +19,8 @@ import gc
 num_cores = NUM_CORES
 
 print(DEVICE, num_cores)
-lossHistory = []
+vHistory = []
+pHistory
 fig = plt.figure()
 alphazero = Player().to(DEVICE)
 torch.save(alphazero, BEST_PATH)
@@ -59,7 +60,9 @@ while True:
 		dataset = pd.concat(results)
 		dataset = dataset[-1 * TOTAL_GAMES:]
 
+	print("Epoch count: ", numLoops)
 	print("time:", time.time() - startTime)
+	startTime = time.time()
 	
 	# dataset.to_pickle('dataset.pkl')
 	# dataset.to_csv('dataset.csv')
@@ -72,12 +75,13 @@ while True:
 																	 num_samples=BATCH_SIZE_TRAIN*N_BATCHES, replacement=True)
 	# print(list(sample_strategy))
 	data_loader = torch.utils.data.DataLoader(train_data, batch_size=BATCH_SIZE_TRAIN, sampler=sample_strategy)
-	alphazero, l = train(data_loader, alphazero)
+	alphazero, vL, pL = train(data_loader, alphazero)
 	print("Training complete")
-	print("Loss", l[0])
-	lossHistory.extend(l)
+	print("Value loss ", vL[-1], ", Policy loss ", pL[-1])
+	vHistory.extend(vL); pHistory.extend(pL)
 	fig.clf()
-	plt.plot(lossHistory)
+	plt.plot(vHistory, 'k')
+	plt.plot(pHistory, 'r')
 	fig.savefig("loss.pdf")
 	# Evaluate player
 	if numLoops > 10:

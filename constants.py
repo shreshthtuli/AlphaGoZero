@@ -3,7 +3,7 @@ import multiprocessing
 nmc = multiprocessing.cpu_count()
 
 # Number of cores
-NUM_CORES = 32
+NUM_CORES = 16
 
 # Size of Go Board
 BOARD_SIZE = 13
@@ -77,7 +77,7 @@ else:
 	EVAL_GAMES = 1 * NUM_CORES # 400
 
 	# batch size for training of policy+value network
-	BATCH_SIZE_TRAIN = 32 # 2048 an 32 per worker
+	BATCH_SIZE_TRAIN = 128 # 2048 an 32 per worker
 
 	# number of batches
 	N_BATCHES = 1000 # 1000
