@@ -44,7 +44,7 @@ class Game:
 
 	def playOnce(self, state, player, other_pass, competitive=False):
 		if self.mctsEnable:
-			action, action_scores = self.mcts.play(self.board, self.player, competitive)
+			action, action_scores = self.mcts.play(self.board, player, competitive)
 			state, reward, done = self.board.step(action)
 		else:
 			state = self.getState(state)

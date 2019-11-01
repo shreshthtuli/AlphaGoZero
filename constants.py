@@ -49,7 +49,7 @@ if NUM_CORES < 10:
 	MILESTONES = [400, 600] # 400, 600
 
 	# Evaluation Games
-	EVAL_GAMES = 1 * NUM_CORES # 400
+	EVAL_GAMES = 2 * NUM_CORES # 400
 
 	# batch size for training of policy+value network
 	BATCH_SIZE_TRAIN = 64 # 2048 an 32 per worker
