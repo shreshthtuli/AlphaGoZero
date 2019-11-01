@@ -5,6 +5,8 @@ from copy import deepcopy
 from sys import maxsize
 from scipy.special import softmax
 import time
+import warnings
+warnings.simplefilter("ignore")
 
 dh_group = [(None, None), ((np.rot90, 1), None), ((np.rot90, 2), None),
             ((np.rot90, 3), None), (np.fliplr, None), (np.flipud, None),

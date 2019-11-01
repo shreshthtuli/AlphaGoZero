@@ -64,7 +64,7 @@ class Game:
 			self.mcts = MCTS()
 		# Black plays first
 		self.player_color = (1 if opFirst else 2) if self.opponent else 2
-		print("Player color", self.player_color)
+		# print("Player color", self.player_color)
 		datasetStates = []
 		datasetActions = []
 		datasetDone = []

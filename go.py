@@ -185,7 +185,7 @@ class GoEnv():
         assert self.board.is_terminal
         self.done = True
         reward = self.get_winner()
-        return _format_state(self.history, self.player_color, self.board_size), reward, True
+        return self.state, reward, True
 
 
     def __deepcopy__(self, memo):
