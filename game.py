@@ -71,7 +71,7 @@ class Game:
 		datasetRewards = []
 		datasetActionScores = []
 		comp = False; reward = None
-		startTime = time.time()
+		# startTime = time.time()
 
 		if opFirst:
 			state, reward, done, action, _ = self.playOnce(self.getState(state), \
