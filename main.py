@@ -21,7 +21,13 @@ num_cores = NUM_CORES
 print(DEVICE, num_cores)
 vHistory = []
 pHistory = []
-fig = plt.figure()
+fig, ax1 = plt.subplots()
+ax1.set_xlabel('iterations * 100')
+ax1.set_ylabel('Value Loss', color='tab:red')
+ax1.tick_params(axis='y', labelcolor='tab:red')
+ax2 = ax1.twinx()
+ax2.set_ylabel('Policy Loss', color='tab:blue')
+ax2.tick_params(axis='y', labelcolor='tab:blue')
 alphazero = Player().to(DEVICE)
 torch.save(alphazero, BEST_PATH)
 if platform == 'linux':
@@ -79,9 +85,10 @@ while True:
 	print("Training complete")
 	print("Value loss ", vL[-1], ", Policy loss ", pL[-1])
 	vHistory.extend(vL); pHistory.extend(pL)
-	fig.clf()
-	plt.plot(vHistory, 'k')
-	plt.plot(pHistory, 'r')
+	ax1.cla(); ax2.cla()
+	ax1.plot(range(len(vHistory)), vHistory, 'r')
+	ax2.plot(range(len(vHistory)), pHistory, 'b')
+	fig.tight_layout()
 	fig.savefig("loss.pdf")
 	# Evaluate player
 	if numLoops > 10:

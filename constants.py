@@ -3,7 +3,7 @@ import multiprocessing
 nmc = multiprocessing.cpu_count()
 
 # Number of cores
-NUM_CORES = 16
+NUM_CORES = 2
 
 # Size of Go Board
 BOARD_SIZE = 13
@@ -39,14 +39,14 @@ if NUM_CORES < 10:
 	BLOCKS = 3 #19
 
 	# Number of games in self play
-	GAMES = 4 # 25000
+	GAMES = 2 # 25000
 	TOTAL_GAMES = 50000 # 500k
 
 	# Number of MCTS simulations
 	MCTS_SIMS = 10 # 1600
 
 	# milestones for changing learning rate
-	MILESTONES = [400, 600] # 400, 600
+	MILESTONES = [40, 60] # 400, 600
 
 	# Evaluation Games
 	EVAL_GAMES = 4 # 400
