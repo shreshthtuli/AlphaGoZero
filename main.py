@@ -42,6 +42,7 @@ def genGame(sim):
 	return localdf
 
 startTime = time.time()
+numLoops = 0
 while True:
 	dataset = pd.DataFrame({
 				"States": [],
@@ -53,8 +54,10 @@ while True:
 	# Generate dataset by self play
 	if platform == 'linux':
 		results = Parallel(n_jobs=num_cores)(delayed(genGame)(s) for s in simulators)
+		results.append(dataset)
 		# results = [genGame(simulators[0])]
 		dataset = pd.concat(results)
+		dataset = dataset[-1 * TOTAL_GAMES:]
 
 	print("time:", time.time() - startTime)
 	
@@ -77,5 +80,8 @@ while True:
 	plt.plot(lossHistory)
 	fig.savefig("loss.pdf")
 	# Evaluate player
-	alphazero = evaluateAndSave(alphazero)
-	print("Evaluation complete")
+	if numLoops > 10:
+		MCTS_SIMS = min(50, 5 + numLoops)
+		alphazero = evaluateAndSave(alphazero)
+		print("Evaluation complete")
+	numLoops += 1
