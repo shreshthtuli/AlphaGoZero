@@ -68,7 +68,7 @@ else:
 	TOTAL_GAMES = 50000 # 500k
 
 	# Number of MCTS simulations
-	MCTS_SIMS = 120 # 1600
+	MCTS_SIMS = 5 # 1600
 
 	# milestones for changing learning rate
 	MILESTONES = [400, 600] # 400, 600
