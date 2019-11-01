@@ -101,7 +101,7 @@ class Game:
 				return 1
 			return 0
 
-		datasetRewards = np.multiply(datasetRewards, -1 if reward != 1 else 1)
+		datasetRewards = np.multiply(datasetRewards, -1 if self.board.get_winner() != 1 else 1)
 		df = pd.DataFrame({
 			"States": datasetStates,
 			"Actions": datasetActions,
