@@ -81,7 +81,7 @@ while True:
 	fig.savefig("loss.pdf")
 	# Evaluate player
 	if numLoops > 10:
-		MCTS_SIMS = 30
+		MCTS_SIMS = min(50, 5 + numLoops)
 		alphazero = evaluateAndSave(alphazero)
 		print("Evaluation complete")
 	numLoops += 1
