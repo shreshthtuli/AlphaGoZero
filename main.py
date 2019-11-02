@@ -30,10 +30,9 @@ ax2.set_ylabel('Policy Loss', color='tab:blue')
 ax2.tick_params(axis='y', labelcolor='tab:blue')
 alphazero = Player().to(DEVICE)
 torch.save(alphazero, BEST_PATH)
-if platform == 'linux':
-	from evaluator import *
-	from game import Game
-	simulators = [Game(alphazero, mctsEnable=True) for c in range(num_cores)]
+from evaluator import *
+from game import Game
+simulators = [Game(alphazero, mctsEnable=True) for c in range(num_cores)]
 
 def genGame(sim):
 	localdf = pd.DataFrame({
@@ -60,11 +59,10 @@ dataset = pd.DataFrame({
 
 while True:
 	# Generate dataset by self play
-	if platform == 'linux':
-		results = Parallel(n_jobs=num_cores)(delayed(genGame)(s) for s in simulators)
-		# results = [genGame(simulators[0])]
-		dataset = dataset.append(pd.concat(results, ignore_index=True), ignore_index=True)
-		dataset = dataset[-1 * TOTAL_GAMES:]
+	results = Parallel(n_jobs=num_cores)(delayed(genGame)(s) for s in simulators)
+	# results = [genGame(simulators[0])]
+	dataset = dataset.append(pd.concat(results, ignore_index=True), ignore_index=True)
+	dataset = dataset[-1 * TOTAL_GAMES:]
 
 	print("Epoch count: ", numLoops)
 	print("Dataset size: ", dataset.shape)
@@ -91,8 +89,9 @@ while True:
 	ax2.plot(range(len(vHistory)), pHistory, 'b')
 	fig.tight_layout()
 	fig.savefig("loss2.pdf")
+	torch.save(alphazero, 'models/curModel'+str(numLoops)+'.pth')
 	# Evaluate player
-	# if numLoops > 15:
-	# 	alphazero = evaluateAndSave(alphazero)
-	# 	print("Evaluation complete")
+	if numLoops > 5 and numLoops % 10 == 0:
+		alphazero = evaluateAndSave(alphazero)
+		print("Evaluation complete")
 	numLoops += 1
