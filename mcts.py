@@ -6,6 +6,7 @@ from sys import maxsize
 from scipy.special import softmax
 import time
 import warnings
+from math import sqrt
 warnings.simplefilter("ignore")
 
 dh_group = [(None, None), ((np.rot90, 1), None), ((np.rot90, 2), None),
@@ -49,11 +50,13 @@ class Node:
 		self.n = 0 # number of visits to this node
 		self.w = 0 # total action value
 		self.q = 0 # mean action value
+		self.sqrtTotal = 0.0 # sqrt of sum of n of children
 		self.children = []
 		self.parent = parent
 		self.move = move
 
 	def update(self, v):
+		self.parent.sqrtTotal = sqrt((self.parent.sqrtTotal ** 2) + 1)
 		self.n += 1
 		self.w = self.w + v
 		self.q = self.w / self.n
@@ -61,8 +64,8 @@ class Node:
 	def isLeaf(self):
 		return len(self.children) == 0
 
-	def getU(self, total):
-		return C_PUCT * self.p * np.sqrt(total) / (1 + self.n)
+	def getU(self):
+		return C_PUCT * self.p * self.parent.sqrtTotal / (1 + self.n)
 
 	def expand(self, p):
 		for i in range(p.shape[0]):
@@ -121,8 +124,7 @@ class MCTS():
 
 	def select(self, node):
 		# select best child as per UCT algo (if multiple best select randomly any)
-		total = np.sum([child.n for child in node.children])
-		scores = [child.q + child.getU(total) for child in node.children]
+		scores = [child.q + child.getU() for child in node.children]
 		bestChildren = np.where(scores == np.max(scores))[0]
 		bestChild = node.children[np.random.choice(bestChildren)]
 		return bestChild
