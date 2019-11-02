@@ -90,7 +90,7 @@ while True:
 	ax1.plot(range(len(vHistory)), vHistory, 'r')
 	ax2.plot(range(len(vHistory)), pHistory, 'b')
 	fig.tight_layout()
-	fig.savefig("loss.pdf")
+	fig.savefig("loss2.pdf")
 	# Evaluate player
 	# if numLoops > 15:
 	# 	alphazero = evaluateAndSave(alphazero)

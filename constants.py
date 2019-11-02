@@ -43,7 +43,7 @@ if NUM_CORES < 10:
 	TOTAL_GAMES = 50000 # 500k
 
 	# Number of MCTS simulations
-	MCTS_SIMS = 10 # 1600
+	MCTS_SIMS = 20 # 1600
 
 	# milestones for changing learning rate
 	MILESTONES = [400, 600] # 400, 600
