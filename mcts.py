@@ -74,9 +74,9 @@ class MCTS():
 		self.root = Node()
 		self.numMoves = 0
 
-	def play(self, board, player, competitive=False):
+	def play(self, board, player, competitive=False, move_no=0):
 		# Run another 1600 sims
-		self.runSims(board, player)
+		self.runSims(board, player, move_no)
 		# Find move
 		move, p = None, None
 		action_scores = np.array([child.n for child in self.root.children])
@@ -99,13 +99,20 @@ class MCTS():
 				break
 		return move, return_scores
 
-	def runSims(self, board, player):
+	def runSims(self, board, player, move_no=0):
+		selectTime, expandTime, backupTime = 0, 0, 0
+		totalTime, uctTime, whereTime, randomTime = 0, 0, 0, 0
 		for i in range(MCTS_SIMS):
+			t1 = time.time()
 			boardCopy = deepcopy(board)
 			current_node = self.root
 			done = False; depth = 0
 			while not current_node.isLeaf() and not done:
-				child = self.select(current_node)
+				child, totalTimeI, uctTimeI, whereTimeI, randomTimeI = self.select(current_node)
+				totalTime += totalTimeI
+				uctTime += uctTimeI
+				whereTime += whereTimeI
+				randomTime += randomTimeI
 				boardCopy.step(child.move)
 				# print(boardCopy.state)
 				# boardCopy.render()
@@ -114,18 +121,31 @@ class MCTS():
 				# depth += 1
 				# input()
 				current_node = child
+			t2 = time.time()
 			v = self.expandAndEval(current_node, boardCopy, player)
 			# print(boardCopy.state)
+			t3 = time.time()
 			# print("Backup value: ", v)
 			self.backup(current_node, v)
+			t4 = time.time()
+			selectTime += t2-t1
+			expandTime += t3-t2
+			backupTime += t4-t3
+		# print(move_no, selectTime, expandTime, backupTime)
+		print(move_no, totalTime, uctTime, whereTime, randomTime)
 
 	def select(self, node):
 		# select best child as per UCT algo (if multiple best select randomly any)
+		t1 = time.time()
 		total = np.sum([child.n for child in node.children])
+		t2 = time.time()
 		scores = [child.q + child.getU(total) for child in node.children]
+		t3 = time.time()
 		bestChildren = np.where(scores == np.max(scores))[0]
+		t4 = time.time()
 		bestChild = node.children[np.random.choice(bestChildren)]
-		return bestChild
+		t5 = time.time()
+		return bestChild, t2-t1, t3-t2, t4-t3, t5-t4
 
 	def expandAndEval(self, node, board, player):
 		# expand as per NN then backup value
