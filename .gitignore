@@ -1,12 +1,11 @@
-*.csv
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
-*.csv
 
 SuperGo-master/
+*.pkl
+*.pdf
 
 # C extensions
 *.so
