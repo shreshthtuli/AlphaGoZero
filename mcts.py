@@ -111,11 +111,12 @@ class MCTS():
 			current_node = self.root
 			done = False; depth = 0
 			while not current_node.isLeaf() and not done:
-				child, totalTimeI, uctTimeI, whereTimeI, randomTimeI = self.select(current_node)
-				totalTime += totalTimeI
-				uctTime += uctTimeI
-				whereTime += whereTimeI
-				randomTime += randomTimeI
+				#child, totalTimeI, uctTimeI, whereTimeI, randomTimeI = self.select(current_node)
+				child = self.select(current_node)
+				#totalTime += totalTimeI
+				#uctTime += uctTimeI
+				#whereTime += whereTimeI
+				#randomTime += randomTimeI
 				boardCopy.step(child.move)
 				# print(boardCopy.state)
 				# boardCopy.render()
@@ -134,21 +135,21 @@ class MCTS():
 			selectTime += t2-t1
 			expandTime += t3-t2
 			backupTime += t4-t3
-		# print(move_no, selectTime, expandTime, backupTime)
-		print(move_no, totalTime, uctTime, whereTime, randomTime)
+		print(move_no, selectTime, expandTime, backupTime)
+		# print(move_no, totalTime, uctTime, whereTime, randomTime)
 
 	def select(self, node):
 		# select best child as per UCT algo (if multiple best select randomly any)
-		t1 = time.time()
-		total = np.sum([child.n for child in node.children])
-		t2 = time.time()
+		#t1 = time.time()
+		# total = np.sum([child.n for child in node.children])
+		#t2 = time.time()
 		scores = [child.q + child.getU() for child in node.children]
-		t3 = time.time()
+		#t3 = time.time()
 		bestChildren = np.where(scores == np.max(scores))[0]
-		t4 = time.time()
+		#t4 = time.time()
 		bestChild = node.children[np.random.choice(bestChildren)]
-		t5 = time.time()
-		return bestChild, t2-t1, t3-t2, t4-t3, t5-t4
+		#t5 = time.time()
+		return bestChild#, t2-t1, t3-t2, t4-t3, t5-t4
 
 	def expandAndEval(self, node, board, player):
 		# expand as per NN then backup value
