@@ -55,7 +55,7 @@ if NUM_CORES < 10:
 	BATCH_SIZE_TRAIN = 64 # 2048 an 32 per worker
 
 	# number of batches
-	N_BATCHES = 1000 # 1000
+	N_BATCHES = 500 # 1000
 else:
 	# Number of filters
 	FILTERS = 256 # 256
