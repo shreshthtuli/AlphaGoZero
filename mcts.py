@@ -106,10 +106,10 @@ class MCTS():
 		for i in range(MCTS_SIMS):
 			boardCopy = deepcopy(board)
 			current_node = self.root
-			done = False; depth = 0
+			done = False; depth = 0; v = 0
 			while not current_node.isLeaf() and not done:
 				child = self.select(current_node)
-				boardCopy.step(child.move)
+				_, winner, done = boardCopy.step(child.move)
 				# print(boardCopy.state)
 				# boardCopy.render()
 				# print("Move = ", child.move)
@@ -117,9 +117,10 @@ class MCTS():
 				# depth += 1
 				# input()
 				current_node = child
-			v = self.expandAndEval(current_node, boardCopy, player)
-			# print(boardCopy.state)
-			# print("Backup value: ", v)
+			if done:
+				v = 1 if winner == board.player_color else -1
+			else:
+				v = self.expandAndEval(current_node, boardCopy, player)
 			self.backup(current_node, v)
 
 	def select(self, node):
