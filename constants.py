@@ -3,7 +3,7 @@ import multiprocessing
 nmc = multiprocessing.cpu_count()
 
 # Number of cores
-NUM_CORES = 1
+NUM_CORES = 4
 
 # Size of Go Board
 BOARD_SIZE = 13
