@@ -103,9 +103,9 @@ class GoEnv():
 
         self.board = self.board.play(_action_to_coord(self.board, action), self.player_color)
         board = self.board.encode()
-        color = self.player_color - 1
-        history[color] = np.roll(history[color], 1, axis=0)
-        history[color][0] = np.array(board[color])
+        for color in [0,1]:
+            history[color] = np.roll(history[color], 1, axis=0)
+            history[color][0] = np.array(board[color])
         self.player_color = pachi_py.stone_other(self.player_color)
 
 
