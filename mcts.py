@@ -53,6 +53,7 @@ class Node:
 		self.sqrtTotal = 0.0 # sqrt of sum of n of children
 		self.children = []
 		self.parent = parent
+		self.qPlusU = self.getU() if self.parent else 0
 		self.move = move
 
 	def update(self, v):
@@ -60,6 +61,7 @@ class Node:
 		self.n += 1
 		self.w = self.w + v
 		self.q = self.w / self.n
+		self.qPlusU = self.q + self.getU()
 
 	def isLeaf(self):
 		return len(self.children) == 0
@@ -125,7 +127,7 @@ class MCTS():
 
 	def select(self, node):
 		# select best child as per UCT algo (if multiple best select randomly any)
-		scores = [child.q + child.getU() for child in node.children]
+		scores = [child.qPlusU for child in node.children]
 		bestChildren = np.where(scores == np.max(scores))[0]
 		bestChild = node.children[np.random.choice(bestChildren)]
 		return bestChild
