@@ -28,6 +28,9 @@ C_PUCT = 0.2
 # Path of best model
 BEST_PATH = "bestModel.pth"
 
+# Path of current model
+CUR_PATH = "curModel.pth"
+
 # Threshold to overwrite best player
 EVAL_THRESH = 0.5
 
@@ -40,10 +43,10 @@ if NUM_CORES < 10:
 
 	# Number of games in self play
 	GAMES = 1 * NUM_CORES # 25000
-	TOTAL_GAMES = 50000 # 500k
+	TOTAL_GAMES = 10000 # 500k
 
 	# Number of MCTS simulations
-	MCTS_SIMS = 20 # 1600
+	MCTS_SIMS = 10 # 1600
 
 	# milestones for changing learning rate
 	MILESTONES = [400, 600] # 400, 600
