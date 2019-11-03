@@ -51,7 +51,7 @@ def train(train_loader, model):
 		cross_entropy_loss = cross_entropy_mod(pred_probs, true_probs)
 		loss = 0.5*mse_loss + 0.5*cross_entropy_loss
 		loss.backward()
-		if i % 100 == 0:
+		if i % 10 == 0:
 			valueLoss.append(mse_loss.data.cpu().numpy())
 			policyLoss.append(cross_entropy_loss.data.cpu().numpy())
 

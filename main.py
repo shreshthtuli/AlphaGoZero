@@ -73,7 +73,7 @@ while True:
 	dataset = dataset[-1 * TOTAL_GAMES:]
 
 	print("Epoch count: ", numLoops)
-	print("Dataset size: ", dataset.shape)
+	print("Dataset size: ", dataset.shape[0])
 	print("time:", time.time() - startTime)
 	startTime = time.time()
 	
@@ -90,13 +90,13 @@ while True:
 	data_loader = torch.utils.data.DataLoader(train_data, batch_size=BATCH_SIZE_TRAIN, sampler=sample_strategy)
 	alphazero, vL, pL = train(data_loader, alphazero)
 	print("Training complete")
-	print("Value loss ", vL[-1], ", Policy loss ", pL[-1])
-	vHistory.extend(vL); pHistory.extend(pL)
+	vHistory.append(np.mean(vL)); pHistory.append(np.mean(pL))
+	print("Value loss ", vHistory[-1], ", Policy loss ", pHistory[-1])
 	ax1.cla(); ax2.cla()
 	ax1.plot(range(len(vHistory)), vHistory, 'r')
 	ax2.plot(range(len(vHistory)), pHistory, 'b')
 	fig.tight_layout()
-	fig.savefig("loss2.pdf")
+	fig.savefig("loss4.pdf")
 	torch.save(alphazero, 'models/curModel'+str(numLoops)+'.pth')
 	# Evaluate player
 	if numLoops > 5 and numLoops % 10 == 0:
