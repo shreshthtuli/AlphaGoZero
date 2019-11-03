@@ -23,7 +23,7 @@ def train(train_loader, model):
 	policyLoss = []
 	epoch = 0
 	
-	optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=0.0001)
+	optimizer = optim.SGD(model.parameters(), lr=0.1, momentum=0.9, weight_decay=0.0001)
 	scheduler = MultiStepLR(optimizer, milestones=MILESTONES, gamma=0.1)
 	
 	criterion1 = nn.MSELoss()
@@ -51,7 +51,7 @@ def train(train_loader, model):
 		cross_entropy_loss = cross_entropy_mod(pred_probs, true_probs)
 		loss = 0.5*mse_loss + 0.5*cross_entropy_loss
 		loss.backward()
-		if i % 100 == 0:
+		if i % 10 == 0:
 			valueLoss.append(mse_loss.data.cpu().numpy())
 			policyLoss.append(cross_entropy_loss.data.cpu().numpy())
 

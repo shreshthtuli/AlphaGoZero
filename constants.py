@@ -11,6 +11,12 @@ BOARD_SIZE = 13
 # Device
 DEVICE = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 
+# Epsilon for dirichlet
+EPS = 0.25
+
+# input to dirichlet funciton
+ALPHA = 0.03
+
 # Number of Games to bw considered in state
 HISTORY = 7 
 
@@ -49,7 +55,7 @@ if NUM_CORES < 10:
 	TOTAL_GAMES = 20000 # 500k
 
 	# Number of MCTS simulations
-	MCTS_SIMS = 5 # 1600
+	MCTS_SIMS = 10 # 1600
 
 	# milestones for changing learning rate
 	MILESTONES = [200, 300] # 400, 600
