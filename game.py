@@ -42,9 +42,9 @@ class Game:
 		x = torch.tensor(x, dtype=torch.float, device=DEVICE)
 		return x
 
-	def playOnce(self, state, player, other_pass, competitive=False, move_no=0):
+	def playOnce(self, state, player, other_pass, competitive=False):
 		if self.mctsEnable:
-			action, action_scores = self.mcts.play(self.board, player, competitive, move_no)
+			action, action_scores = self.mcts.play(self.board, player, competitive)
 			state, reward, done = self.board.step(action)
 		else:
 			state = self.getState(state)
@@ -73,19 +73,18 @@ class Game:
 		datasetActionScores = []
 		comp = False; reward = None
 		# startTime = time.time()
-		ct = 0
 		if opFirst:
 			state, reward, done, action, _ = self.playOnce(self.getState(state), \
-                    self.opponent, self.player.passed, competitive=True, move_no=ct)
+                    self.opponent, self.player.passed, competitive=True)
 		while not done:
 			if self.opponent:
 				state, reward, done, action, _ = self.playOnce(self.getState(state), \
-                    self.player, self.opponent.passed, competitive=True, move_no=ct)
+                    self.player, self.opponent.passed, competitive=True)
 				state, reward, done, action, _ = self.playOnce(self.getState(state), \
-                    self.opponent, self.player.passed, competitive=True, move_no=ct)
+                    self.opponent, self.player.passed, competitive=True)
 			else:
 				new_state, reward, done, action, action_scores = self.playOnce(state, self.player, \
-                    False, move_no=ct)
+                    False)
 				datasetStates.append([state])
 				datasetActions.append(action)
 				datasetDone.append(done)
@@ -95,7 +94,6 @@ class Game:
 				datasetRewards.append(1 if self.player_color == 1 else -1)
 				self.swap()
 				state = new_state
-			ct += 1
 		# reward is 1 if white wins
 		# print("Winner", 'white' if self.board.get_winner() == 1 else 'black')
 		if self.opponent:

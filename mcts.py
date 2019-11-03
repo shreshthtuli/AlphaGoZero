@@ -79,9 +79,9 @@ class MCTS():
 		self.root = Node()
 		self.numMoves = 0
 
-	def play(self, board, player, competitive=False, move_no=0):
+	def play(self, board, player, competitive=False):
 		# Run another 1600 sims
-		self.runSims(board, player, move_no)
+		self.runSims(board, player)
 		# Find move
 		move, p = None, None
 		action_scores = np.array([child.n for child in self.root.children])

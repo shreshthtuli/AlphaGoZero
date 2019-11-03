@@ -49,7 +49,7 @@ if NUM_CORES < 10:
 	MCTS_SIMS = 10 # 1600
 
 	# milestones for changing learning rate
-	MILESTONES = [400, 600] # 400, 600
+	MILESTONES = [200, 300] # 400, 600
 
 	# Evaluation Games
 	EVAL_GAMES = 2 * NUM_CORES # 400
