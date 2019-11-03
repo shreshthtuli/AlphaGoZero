@@ -87,7 +87,7 @@ class MCTS():
 
 	def play(self, board, player, competitive=False):
 		# 1 step lookahead evaluation
-		self.TuliSharmaOptimization(player, board)
+		self.TuliSharmaOptimization(player, board, competitive)
 		# Run another 1600 sims
 		self.runSims(board, player)
 		# Find move
@@ -163,12 +163,15 @@ class MCTS():
 			current_node.update(v)
 			current_node = current_node.parent
 
-	def TuliSharmaOptimization(self, player, board):
+	def TuliSharmaOptimization(self, player, board, competitive):
 		feature = player.feature(getState([sample_rotation(board.state)]))
 		p = player.policy(feature)
 		# Expand root to explore all 1 step moves
 		if len(self.root.children) == 0:
-			self.root.expand(constrainMoves(board, dirichlet_noise(p[0].cpu().data.numpy()))) # Can add dirichlet noise
+			if competitive:
+				self.root.expand(constrainMoves(board, p[0].cpu().data.numpy()))
+			else:
+				self.root.expand(constrainMoves(board, dirichlet_noise(p[0].cpu().data.numpy()))) 
 		# Evaluate all 1 step moves
 		childStates = []
 		for child in self.root.children:
