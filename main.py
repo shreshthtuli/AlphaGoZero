@@ -96,8 +96,7 @@ while True:
 	ax1.plot(range(len(vHistory)), vHistory, 'r')
 	ax2.plot(range(len(vHistory)), pHistory, 'b')
 	fig.tight_layout()
-	fig.savefig("loss4.pdf")
-	torch.save(alphazero, 'models/curModel'+str(numLoops)+'.pth')
+	fig.savefig("loss.pdf")
 	# Evaluate player
 	if numLoops > 5 and numLoops % 10 == 0:
 		alphazero = evaluateAndSave(alphazero)

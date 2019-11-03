@@ -39,8 +39,8 @@ def constrainMoves(board, p):
 	newP[np.where(check != 0)] = 0
 	return newP
 
-def getState(state):
-	x = torch.from_numpy(np.array([state]))
+def getState(states):
+	x = torch.from_numpy(np.array(states))
 	x = torch.tensor(x, dtype=torch.float, device=DEVICE)
 	return x
 
@@ -80,6 +80,8 @@ class MCTS():
 		self.numMoves = 0
 
 	def play(self, board, player, competitive=False):
+		# 1 step lookahead evaluation
+		self.TuliSharmaOptimization(player, board)
 		# Run another 1600 sims
 		self.runSims(board, player)
 		# Find move
@@ -143,7 +145,7 @@ class MCTS():
 
 	def expandAndEval(self, node, board, player):
 		# expand as per NN then backup value
-		feature = player.feature(getState(sample_rotation(board.state)))
+		feature = player.feature(getState([sample_rotation(board.state)]))
 		p = player.policy(feature)
 		v = player.value(feature)
 		node.expand(constrainMoves(board, p[0].cpu().data.numpy()))
@@ -154,3 +156,21 @@ class MCTS():
 		while current_node.parent != None:
 			current_node.update(v)
 			current_node = current_node.parent
+
+	def TuliSharmaOptimization(self, player, board):
+		feature = player.feature(getState([sample_rotation(board.state)]))
+		p = player.policy(feature)
+		# Expand root to explore all 1 step moves
+		if len(self.root.children) == 0:
+			self.root.expand(constrainMoves(board, p[0].cpu().data.numpy()))
+		# Evaluate all 1 step moves
+		childStates = []
+		for child in self.root.children:
+			boardCopy = deepcopy(board)
+			boardCopy.step(child.move)
+			childStates.append(sample_rotation(boardCopy.state))
+		features = player.feature(getState(childStates))
+		v = player.value(features).cpu().data.numpy()
+		# Update q values of these states
+		for i in range(len(self.root.children)):
+			self.root.children[i].update(v[i][0])
