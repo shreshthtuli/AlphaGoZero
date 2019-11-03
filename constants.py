@@ -11,6 +11,12 @@ BOARD_SIZE = 13
 # Device
 DEVICE = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 
+# Epsilon for dirichlet
+EPS = 0.25
+
+# input to dirichlet funciton
+ALPHA = 0.3
+
 # Number of Games to bw considered in state
 HISTORY = 7 
 

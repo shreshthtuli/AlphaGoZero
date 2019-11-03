@@ -44,6 +44,12 @@ def getState(states):
 	x = torch.tensor(x, dtype=torch.float, device=DEVICE)
 	return x
 
+def dirichlet_noise(probas):
+    dim = (probas.shape[0],)
+    new_probas = (1 - EPS) * probas + \
+                    EPS * np.random.dirichlet(np.full(dim, ALPHA))
+    return new_probas
+
 class Node:
 	def __init__(self, parent=None, prob=None, move=None):
 		self.p = prob # probability of coming to this node
@@ -162,7 +168,7 @@ class MCTS():
 		p = player.policy(feature)
 		# Expand root to explore all 1 step moves
 		if len(self.root.children) == 0:
-			self.root.expand(constrainMoves(board, p[0].cpu().data.numpy()))
+			self.root.expand(constrainMoves(board, dirichlet_noise(p[0].cpu().data.numpy()))) # Can add dirichlet noise
 		# Evaluate all 1 step moves
 		childStates = []
 		for child in self.root.children:
