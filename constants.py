@@ -15,7 +15,7 @@ DEVICE = torch.device("cuda") if torch.cuda.is_available() else torch.device("cp
 EPS = 0.25
 
 # input to dirichlet funciton
-ALPHA = 0.3
+ALPHA = 0.03
 
 # Number of Games to bw considered in state
 HISTORY = 7 
