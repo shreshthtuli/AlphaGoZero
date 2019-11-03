@@ -15,6 +15,9 @@ from sys import platform
 from agent import Player
 from data import *
 import gc
+from os import path
+from evaluator import *
+from game import Game
 
 num_cores = NUM_CORES
 
@@ -28,10 +31,13 @@ ax1.tick_params(axis='y', labelcolor='tab:red')
 ax2 = ax1.twinx()
 ax2.set_ylabel('Policy Loss', color='tab:blue')
 ax2.tick_params(axis='y', labelcolor='tab:blue')
-alphazero = Player().to(DEVICE)
-torch.save(alphazero, BEST_PATH)
-from evaluator import *
-from game import Game
+
+if path.exists(BEST_PATH):
+	alphazero = torch.load(BEST_PATH)
+else:
+	alphazero = Player().to(DEVICE)
+	torch.save(alphazero, BEST_PATH)
+
 simulators = [Game(alphazero, mctsEnable=True) for c in range(num_cores)]
 
 def genGame(sim):
@@ -61,6 +67,8 @@ while True:
 	# Generate dataset by self play
 	results = Parallel(n_jobs=num_cores)(delayed(genGame)(s) for s in simulators)
 	# results = [genGame(simulators[0])]
+	lenGames = [res.shape[0] for res in results]
+	print(lenGames)
 	dataset = dataset.append(pd.concat(results, ignore_index=True), ignore_index=True)
 	dataset = dataset[-1 * TOTAL_GAMES:]
 

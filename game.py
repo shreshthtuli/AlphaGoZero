@@ -66,17 +66,14 @@ class Game:
 		self.player_color = (2 if opFirst else 1) if self.opponent else 1
 		# if self.opponent:
 		# 	print("Player color", self.player_color)
-		datasetStates = []
-		datasetActions = []
-		datasetDone = []
-		datasetRewards = []
-		datasetActionScores = []
+		datasetStates, datasetActions, datasetDone, datasetRewards, datasetActionScores = [], [], [], [], []
 		comp = False; reward = None
 		# startTime = time.time()
+		ct = 0
 		if opFirst:
 			state, reward, done, action, _ = self.playOnce(self.getState(state), \
                     self.opponent, self.player.passed, competitive=True)
-		while not done:
+		while not done and ct < MOVE_LIMIT:
 			if self.opponent:
 				state, reward, done, action, _ = self.playOnce(self.getState(state), \
                     self.player, self.opponent.passed, competitive=True)
@@ -94,6 +91,7 @@ class Game:
 				datasetRewards.append(1 if self.player_color == 1 else -1)
 				self.swap()
 				state = new_state
+			ct += 1
 		# reward is 1 if white wins
 		# print("Winner", 'white' if self.board.get_winner() == 1 else 'black')
 		if self.opponent:
