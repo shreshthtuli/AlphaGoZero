@@ -9,6 +9,8 @@ import warnings
 from math import sqrt
 warnings.simplefilter("ignore")
 
+all_moves = np.arange(BOARD_SIZE ** 2 + 1)
+
 dh_group = [(None, None), ((np.rot90, 1), None), ((np.rot90, 2), None),
             ((np.rot90, 3), None), (np.fliplr, None), (np.flipud, None),
             (np.flipud,  (np.rot90, 1)), (np.fliplr, (np.rot90, 1))]
@@ -32,12 +34,11 @@ def sample_rotation(state):
 
 def constrainMoves(board, p):
 	legal_moves = board.get_legal_moves()
-	check = np.ones(BOARD_SIZE ** 2 + 1)
-	np.put(check, legal_moves, [0])
-	check = check * (-maxsize - 1)
-	newP = softmax(p + check)
-	newP[np.where(check != 0)] = 0
-	return newP
+	illegal_moves = np.setdiff1d(all_moves,np.array(legal_moves))
+	p[illegal_moves] = 0
+	total = np.sum(p)
+	p /= total
+	return p
 
 def getState(states):
 	x = torch.from_numpy(np.array(states))

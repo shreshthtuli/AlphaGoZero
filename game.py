@@ -95,6 +95,7 @@ class Game:
 		# reward is 1 if white wins
 		print("Winner", 'white' if self.board.get_winner() == 1 else 'black')
 		if self.opponent:
+			print("Player", 'white' if self.player_color == 2 else 'black')
 			if self.board.get_winner() + 1 == self.player_color :
 				return 1
 			return 0
