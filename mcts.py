@@ -93,7 +93,7 @@ class MCTS():
 		self.runSims(board, player)
 		# Find move
 		move, p = None, None
-		action_scores = np.array([child.n for child in self.root.children])
+		action_scores = np.array([child.n-1 for child in self.root.children])
 		return_scores = np.zeros(BOARD_SIZE ** 2 + 1)
 		total = np.sum(action_scores)
 		p = action_scores / total	

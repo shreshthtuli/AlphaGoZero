@@ -45,7 +45,10 @@ class Game:
 
 	def playOnce(self, state, player, other_pass, competitive=False):
 		if self.mctsEnable:
-			action, action_scores = self.mcts.play(self.board, player, competitive)
+			if other_pass and self.board.get_winner() + 1 == self.board.player_color:
+				action = 169; action_scores = np.zeros(170); action_scores[-1] = 1
+			else: 
+				action, action_scores = self.mcts.play(self.board, player, competitive)
 			state, reward, done = self.board.step(action)
 		else:
 			state = self.getState(state)
@@ -76,21 +79,20 @@ class Game:
 		# if self.opponent:
 		# 	print("Player color", self.player_color)
 		datasetStates, datasetActions, datasetDone, datasetRewards, datasetActionScores = [], [], [], [], []
-		comp = False; reward = None
+		comp = False; reward = None; action = 0
 		# startTime = time.time()
 		ct = 0
 		if opFirst:
 			state, reward, done, action, _ = self.playOnce(state, \
-                    self.opponent, self.player.passed, competitive=True) if not self.manual else self.manualMove()
+                    self.opponent, action == 169, competitive=True) if not self.manual else self.manualMove()
 		while not done and ct < MOVE_LIMIT:
 			if self.opponent:
 				state, reward, done, action, _ = self.playOnce(state, \
-                    self.player, self.opponent.passed, competitive=True)
+                    self.player, action == 169, competitive=True)
 				state, reward, done, action, _ = self.playOnce(state, \
-                    self.opponent, self.player.passed, competitive=True) if not self.manual else self.manualMove()
+                    self.opponent, action == 169, competitive=True) if not self.manual else self.manualMove()
 			else:
-				new_state, reward, done, action, action_scores = self.playOnce(state, self.player, \
-                    False)
+				new_state, reward, done, action, action_scores = self.playOnce(state, self.player, action == 169)
 				datasetStates.append([state])
 				datasetActions.append(action)
 				datasetDone.append(done)

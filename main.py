@@ -98,7 +98,7 @@ while True:
 	fig.tight_layout()
 	fig.savefig("loss.pdf")
 	# Evaluate player
-	if numLoops > 5 and numLoops % 10 == 0:
-		alphazero = evaluateAndSave(alphazero)
-		print("Evaluation complete")
+	# if numLoops > 5 and numLoops % 10 == 0:
+	# 	alphazero = evaluateAndSave(alphazero)
+	# 	print("Evaluation complete")
 	numLoops += 1
