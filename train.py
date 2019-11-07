@@ -23,7 +23,7 @@ def train(train_loader, model):
 	policyLoss = []
 	epoch = 0
 	
-	optimizer = optim.SGD(model.parameters(), lr=0.1, momentum=0.9, weight_decay=0.0001)
+	optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=0.0001)
 	scheduler = MultiStepLR(optimizer, milestones=MILESTONES, gamma=0.1)
 	
 	criterion1 = nn.MSELoss()

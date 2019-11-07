@@ -11,12 +11,13 @@ import gc
 np.set_printoptions(threshold=maxsize)
 
 class Game:
-	def __init__(self, player, mctsEnable=True, color='black', opponent=None):
+	def __init__(self, player, mctsEnable=True, manual=False, color='black', opponent=None):
 		# Create new board
 		self.board = Board(color, BOARD_SIZE)
 		self.player_color = 2 if color == "black" else 1
 		self.player = player
 		self.opponent = opponent
+		self.manual = manual
 		self.mctsEnable = mctsEnable
 		if mctsEnable:
 			self.mcts = MCTS()
@@ -57,6 +58,14 @@ class Game:
 			action_scores[action] = 1
 		return state, reward, done, action, action_scores
 
+	def manualMove(self):
+		self.board.render()
+		action = int(input())
+		self.mcts.advance(action)
+		state, reward, done = self.board.step(action)
+		self.board.render()
+		return state, reward, done, action, 0
+
 	def play(self, opFirst=False):
 		done = False
 		state = self.board.reset()
@@ -71,14 +80,14 @@ class Game:
 		# startTime = time.time()
 		ct = 0
 		if opFirst:
-			state, reward, done, action, _ = self.playOnce(self.getState(state), \
-                    self.opponent, self.player.passed, competitive=True)
+			state, reward, done, action, _ = self.playOnce(state, \
+                    self.opponent, self.player.passed, competitive=True) if not self.manual else self.manualMove()
 		while not done and ct < MOVE_LIMIT:
 			if self.opponent:
-				state, reward, done, action, _ = self.playOnce(self.getState(state), \
+				state, reward, done, action, _ = self.playOnce(state, \
                     self.player, self.opponent.passed, competitive=True)
-				state, reward, done, action, _ = self.playOnce(self.getState(state), \
-                    self.opponent, self.player.passed, competitive=True)
+				state, reward, done, action, _ = self.playOnce(state, \
+                    self.opponent, self.player.passed, competitive=True) if not self.manual else self.manualMove()
 			else:
 				new_state, reward, done, action, action_scores = self.playOnce(state, self.player, \
                     False)

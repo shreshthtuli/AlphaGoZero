@@ -107,11 +107,14 @@ class MCTS():
 		self.numMoves += 1
 		return_scores[moves] = p
 		# Advance MCTS tree
+		self.advance(move)
+		return move, return_scores
+
+	def advance(self, move):
 		for child in self.root.children:
 			if child.move == move:
 				self.root = child
 				break
-		return move, return_scores
 
 	def runSims(self, board, player, move_no=0):
 		#selectTime, expandTime, backupTime = 0, 0, 0
