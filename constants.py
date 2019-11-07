@@ -43,7 +43,7 @@ CUR_PATH = "curModel.pth"
 # Threshold to overwrite best player
 EVAL_THRESH = 0.5
 
-if NUM_CORES < 10:
+if NUM_CORES < 6:
 	# Number of filters
 	FILTERS = 128 # 256
 
