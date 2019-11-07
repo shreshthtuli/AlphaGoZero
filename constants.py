@@ -48,7 +48,7 @@ if NUM_CORES < 10:
 	FILTERS = 128 # 256
 
 	# Number of Residual Blocks
-	BLOCKS = 13 #19
+	BLOCKS = 10 #19
 
 	# Number of games in self play
 	GAMES = 1 * NUM_CORES # 25000
