@@ -40,7 +40,7 @@ else:
 
 simulators = [Game(alphazero, mctsEnable=True) for c in range(num_cores)]
 
-def genGame(sim):
+def genGame(sim, movelimit):
 	localdf = pd.DataFrame({
 				"States": [],
 				"Actions": [],
@@ -49,7 +49,7 @@ def genGame(sim):
 				"Done": []})	
 	sim.player = alphazero
 	for i in range(int(GAMES/num_cores)):
-		df = sim.play()
+		df = sim.play(movelimit=movelimit)
 		localdf = pd.concat([localdf, df])
 	return localdf
 
@@ -63,20 +63,30 @@ dataset = pd.DataFrame({
 				"Rewards": [],
 				"Done": []})
 
+multplr = 0.4
+movelimit = MOVE_LIMIT*multplr
 while True:
 	# Generate dataset by self play
-	results = Parallel(n_jobs=num_cores)(delayed(genGame)(s) for s in simulators)
+	results = Parallel(n_jobs=num_cores)(delayed(genGame)(s, movelimit) for s in simulators)
 	# results = [genGame(simulators[0])]
 	lenGames = [res.shape[0] for res in results]
+	limitct = 0
+	for lenGame in lenGames:
+		if (lenGame*GAMES/num_cores) >= movelimit-1:
+			limitct += 1
+	if limitct > 0.67*len(lenGames):
+		multplr = min(2.5, 0.1+multplr)
+		movelimit = multplr*MOVE_LIMIT
+	
 	print(lenGames)
 	dataset = dataset.append(pd.concat(results, ignore_index=True), ignore_index=True)
 	dataset = dataset[-1 * TOTAL_GAMES:]
-
+	
 	print("Epoch count: ", numLoops)
 	print("Dataset size: ", dataset.shape[0])
 	print("time:", time.time() - startTime)
 	startTime = time.time()
-	
+
 	# dataset.to_pickle('dataset.pkl')
 	# dataset.to_csv('dataset.csv')
 	# dataset = pd.read_pickle('dataset.pkl')
@@ -96,10 +106,10 @@ while True:
 	ax1.plot(range(len(vHistory)), vHistory, 'r')
 	ax2.plot(range(len(vHistory)), pHistory, 'b')
 	fig.tight_layout()
-	fig.savefig("loss.pdf")
+	fig.savefig("loss_200n.pdf")
 	# Evaluate player
-	# if numLoops > 5 and numLoops % 10 == 0:
-	# 	alphazero = evaluateAndSave(alphazero)
-	# 	print("Evaluation complete")
-	torch.save(alphazero, BEST_PATH)
+	if numLoops > 5 and numLoops % 3 == 0:
+	 	#alphazero = evaluateAndSave(alphazero)
+	 	#print("Evaluation complete")
+		torch.save(alphazero, BEST_PATH)
 	numLoops += 1

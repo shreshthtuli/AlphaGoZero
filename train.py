@@ -12,7 +12,7 @@ def make_best_global_model(model):
 	pass
 
 def cross_entropy_mod(pred, soft_targets):
-    return torch.mean(torch.sum(- soft_targets * logsoftmax(pred), 1))
+    return torch.mean(torch.sum(- soft_targets * torch.log(pred), 1))
 	
 def evaluate(model):
 	return 0.5
