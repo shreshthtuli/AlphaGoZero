@@ -6,16 +6,9 @@ from torch.autograd import Variable
 
 from constants import *
 
-logsoftmax = nn.LogSoftmax(dim = 1)
-
-def make_best_global_model(model):
-	pass
-
 def cross_entropy_mod(pred, soft_targets):
-    return torch.mean(torch.sum(- soft_targets * logsoftmax(pred), 1))
-	
-def evaluate(model):
-	return 0.5
+	pred = torch.add(pred, 0.001)
+	return torch.mean(torch.sum(- soft_targets * torch.log(pred), 1))
 
 def train(train_loader, model):
 	model.train()
