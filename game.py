@@ -45,7 +45,7 @@ class Game:
 
 	def playOnce(self, state, player, other_pass, competitive=False):
 		if self.mctsEnable:
-			if other_pass and self.board.get_winner() + 1 == self.board.player_color:
+			if competitive and other_pass and self.board.get_winner() + 1 == self.board.player_color:
 				action = 169; action_scores = np.zeros(170); action_scores[-1] = 1
 			else: 
 				action, action_scores = self.mcts.play(self.board, player, competitive)

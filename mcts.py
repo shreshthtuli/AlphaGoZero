@@ -62,13 +62,17 @@ class Node:
 		self.parent = parent
 		self.qPlusU = self.getU() if self.parent else 0
 		self.move = move
+		self.bestChild = None
 
 	def update(self, v):
 		self.parent.sqrtTotal = sqrt((self.parent.sqrtTotal ** 2) + 1)
 		self.n += 1
 		self.w = self.w + v
 		self.q = self.w / self.n
+		oldqu = self.qPlusU
 		self.qPlusU = self.q + self.getU()
+		if self.parent and self.qPlusU < oldqu:
+			self.parent.findBest()
 
 	def isLeaf(self):
 		return len(self.children) == 0
@@ -80,6 +84,13 @@ class Node:
 		for i in range(p.shape[0]):
 			if p[i] > 0:
 				self.children.append(Node(parent=self, move=i, prob=p[i]))
+		self.findBest()
+
+	def findBest(self):
+		scores = [child.qPlusU for child in self.children]
+		bestChildren = np.where(scores == np.max(scores))[0]
+		bestChild = self.children[np.random.choice(bestChildren)]
+		self.bestChild = bestChild
 
 class MCTS():
 	def __init__(self):
@@ -116,10 +127,10 @@ class MCTS():
 				self.root = child
 				break
 
-	def runSims(self, board, player, move_no=0):
-		#selectTime, expandTime, backupTime = 0, 0, 0
+	def runSims(self, board, player):
+		# selectTime, expandTime, backupTime = 0, 0, 0
 		for i in range(MCTS_SIMS):
-			#t1 = time.time()
+			# t1 = time.time()
 			boardCopy = deepcopy(board)
 			current_node = self.root
 			done = False; depth = 0; v = 0
@@ -133,25 +144,22 @@ class MCTS():
 				# depth += 1
 				# input()
 				current_node = child
-			#t2 = time.time()
+			# t2 = time.time()
 			if done:
 				v = 1 if winner == board.player_color else -1
 			else:
 				v = self.expandAndEval(current_node, boardCopy, player)
-			#t3 = time.time()
+			# t3 = time.time()
 			self.backup(current_node, v)
-			#t4 = time.time()
-			#selectTime += t2-t1
-			#expandTime += t3-t2
-			#backupTime += t4-t3
-		#print(move_no, selectTime, expandTime, backupTime)
+		# 	t4 = time.time()
+		# 	selectTime += t2-t1
+		# 	expandTime += t3-t2
+		# 	backupTime += t4-t3
+		# print(selectTime, expandTime, backupTime)
 
 	def select(self, node):
 		# select best child as per UCT algo (if multiple best select randomly any)
-		scores = [child.qPlusU for child in node.children]
-		bestChildren = np.where(scores == np.max(scores))[0]
-		bestChild = node.children[np.random.choice(bestChildren)]
-		return bestChild
+		return node.bestChild
 
 	def expandAndEval(self, node, board, player):
 		# expand as per NN then backup value
