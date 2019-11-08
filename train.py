@@ -10,6 +10,7 @@ def cross_entropy_mod(pred, soft_targets):
 	pred = torch.add(pred, 0.001)
 	return torch.mean(torch.sum(- soft_targets * torch.log(pred), 1))
 
+
 def train(train_loader, model):
 	model.train()
 	valueLoss = []

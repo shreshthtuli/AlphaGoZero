@@ -3,7 +3,7 @@ import multiprocessing
 nmc = multiprocessing.cpu_count()
 
 # Number of cores
-NUM_CORES = 3
+NUM_CORES = 6
 
 # Size of Go Board
 BOARD_SIZE = 13
@@ -30,15 +30,18 @@ POLICY_OUTPUT = BOARD_SIZE * BOARD_SIZE + 1
 KERNEL_SIZE = 3
 
 # Move limit
-MOVE_LIMIT = BOARD_SIZE * BOARD_SIZE * 2.5
+MOVE_LIMIT = BOARD_SIZE * BOARD_SIZE
+
+# How many moves without passing multiplier
+NOPASS_MULTPLR = 0.3
 
 C_PUCT = 0.2
 
 # Path of best model
-BEST_PATH = "bestModel.pth"
+BEST_PATH = "/scratch/cse/btech/cs1160311/bestModel_200.pth"
 
 # Path of current model
-CUR_PATH = "curModel.pth"
+CUR_PATH = "/scratch/cse/btech/cs1160311/curModel_200.pth"
 
 # Threshold to overwrite best player
 EVAL_THRESH = 0.5
@@ -76,7 +79,7 @@ else:
 	BLOCKS = 13 #19
 
 	# Number of games in self play
-	GAMES = 2 * NUM_CORES # 25000
+	GAMES = 1 * NUM_CORES # 25000
 	TOTAL_GAMES = 50000 # 500k
 
 	# Number of MCTS simulations

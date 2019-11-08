@@ -32,10 +32,12 @@ def sample_rotation(state):
         return np.array(states[0])
     return np.array(states)
 
-def constrainMoves(board, p):
+def constrainMoves(board, p, moveno=100):
 	legal_moves = board.get_legal_moves()
 	illegal_moves = np.setdiff1d(all_moves,np.array(legal_moves))
 	p[illegal_moves] = 0
+	if moveno < NOPASS_MULTPLR * MOVE_LIMIT:
+		p[-1] = 0
 	total = np.sum(p)
 	p /= total
 	return p
@@ -97,11 +99,11 @@ class MCTS():
 		self.root = Node()
 		self.numMoves = 0
 
-	def play(self, board, player, competitive=False):
+	def play(self, board, player, competitive=False, moveno=100):
 		# 1 step lookahead evaluation
 		self.TuliSharmaOptimization(player, board, competitive)
 		# Run another 1600 sims
-		self.runSims(board, player)
+		self.runSims(board, player, moveno)
 		# Find move
 		move, p = None, None
 		action_scores = np.array([child.n-1 for child in self.root.children])
@@ -127,8 +129,8 @@ class MCTS():
 				self.root = child
 				break
 
-	def runSims(self, board, player):
-		# selectTime, expandTime, backupTime = 0, 0, 0
+	def runSims(self, board, player, moveno=100):
+		#selectTime, expandTime, backupTime = 0, 0, 0
 		for i in range(MCTS_SIMS):
 			# t1 = time.time()
 			boardCopy = deepcopy(board)
@@ -141,15 +143,15 @@ class MCTS():
 				# boardCopy.render()
 				# print("Move = ", child.move)
 				# print("Depth = ", depth)
-				# depth += 1
+				depth += 1
 				# input()
 				current_node = child
 			# t2 = time.time()
 			if done:
 				v = 1 if winner == board.player_color else -1
 			else:
-				v = self.expandAndEval(current_node, boardCopy, player)
-			# t3 = time.time()
+				v = self.expandAndEval(current_node, boardCopy, player, moveno+depth)
+			#t3 = time.time()
 			self.backup(current_node, v)
 		# 	t4 = time.time()
 		# 	selectTime += t2-t1
@@ -161,12 +163,12 @@ class MCTS():
 		# select best child as per UCT algo (if multiple best select randomly any)
 		return node.bestChild
 
-	def expandAndEval(self, node, board, player):
+	def expandAndEval(self, node, board, player, moveno=100):
 		# expand as per NN then backup value
 		feature = player.feature(getState([sample_rotation(board.state)]))
 		p = player.policy(feature)
 		v = player.value(feature)
-		node.expand(constrainMoves(board, p[0].cpu().data.numpy()))
+		node.expand(constrainMoves(board, p[0].cpu().data.numpy(), moveno))
 		return v[0].cpu().data.numpy()
 
 	def backup(self, node, v):
