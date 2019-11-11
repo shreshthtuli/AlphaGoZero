@@ -267,6 +267,7 @@ class GoEnv(gym.Env):
                 self.state = self.state.act(_pass_action(self.board_size))
                 current_score = self.state.board.official_score + self.komi
                 print("illegal_move, considered as Pass")
+                action = _pass_action(self.board_size)
                 # six.reraise(*sys.exc_info())
             elif self.illegal_move_mode == 'lose':
                 # Automatic loss on illegal move
