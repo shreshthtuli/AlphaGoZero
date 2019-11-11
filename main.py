@@ -56,14 +56,17 @@ def genGame(sim, movelimit):
 startTime = time.time()
 numLoops = 0
 
-dataset = pd.DataFrame({
-				"States": [],
-				"Actions": [],
-				"ActionScores": [],
-				"Rewards": [],
-				"Done": []})
+if path.exists('dataset.pkl'):
+	dataset = pd.read_pickle('dataset.pkl')
+else:
+	dataset = pd.DataFrame({
+					"States": [],
+					"Actions": [],
+					"ActionScores": [],
+					"Rewards": [],
+					"Done": []})
 
-multplr = 0.4
+multplr = 2
 movelimit = MOVE_LIMIT*multplr
 while True:
 	# Generate dataset by self play
@@ -74,7 +77,7 @@ while True:
 	for lenGame in lenGames:
 		if (lenGame*GAMES/num_cores) >= movelimit-1:
 			limitct += 1
-	if limitct > 0.67*len(lenGames):
+	if limitct > 0:
 		multplr = min(2.5, 0.1+multplr)
 		movelimit = multplr*MOVE_LIMIT
 	
@@ -106,10 +109,11 @@ while True:
 	ax1.plot(range(len(vHistory)), vHistory, 'r')
 	ax2.plot(range(len(vHistory)), pHistory, 'b')
 	fig.tight_layout()
-	fig.savefig("loss_200n.pdf")
+	fig.savefig("loss_200n5.pdf")
 	# Evaluate player
 	if numLoops > 5 and numLoops % 3 == 0:
 	 	#alphazero = evaluateAndSave(alphazero)
 	 	#print("Evaluation complete")
 		torch.save(alphazero, BEST_PATH)
+		dataset.to_pickle('dataset.pkl')
 	numLoops += 1
