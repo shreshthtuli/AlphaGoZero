@@ -25,16 +25,16 @@ class AlphaGoPlayer():
         return action
 
     def get_action(self, cur_state, opponent_action):
-        print('--------------START--------------')
+        # print('--------------START--------------')
         if opponent_action != -1:
-            print("opponent_action ", opponent_action)
+            # print("opponent_action ", opponent_action)
             self.mcts.advance(opponent_action)
             self.state, _, self.done = self.board.step(opponent_action)
-            self.board.render()
+            # self.board.render()
         if self.done:
             return 169 # pass
         action = self.playOnce(opponent_action == 169)
-        print("my action ", action)
-        self.board.render()
-        print('-------------- END --------------')
+        # print("my action ", action)
+        # self.board.render()
+        # print('-------------- END --------------')
         return action
