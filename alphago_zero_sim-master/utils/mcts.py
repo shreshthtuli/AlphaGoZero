@@ -99,11 +99,11 @@ class MCTS():
 		self.root = Node()
 		self.numMoves = 0
 
-	def play(self, board, player, competitive=False, moveno=100):
+	def play(self, board, player, competitive=False, moveno=100, mcts_time=3):
 		# 1 step lookahead evaluation
 		self.TuliSharmaOptimization(player, board, competitive)
 		# Run another 1600 sims
-		self.runSims(board, player, moveno)
+		self.runSims(board, player, moveno, mcts_time)
 		# Find move
 		move, p = None, None
 		action_scores = np.array([child.n-1 for child in self.root.children])
@@ -129,9 +129,12 @@ class MCTS():
 				self.root = child
 				break
 
-	def runSims(self, board, player, moveno=100):
+	def runSims(self, board, player, moveno=100, mcts_time=3):
 		#selectTime, expandTime, backupTime = 0, 0, 0
+		startTime = time.time()
 		for i in range(MCTS_SIMS):
+			if time.time() - startTime > mcts_time:
+				break
 			# t1 = time.time()
 			boardCopy = deepcopy(board)
 			current_node = self.root

@@ -5,27 +5,31 @@ import pandas as pd
 from utils.mcts import MCTS
 from sys import maxsize
 import time 
-from agent import Player
+from utils.agent import Player
 
 class AlphaGoPlayer():
     def __init__(self, init_state, seed, player_color):
         self.board = Board("black", BOARD_SIZE)
         self.state = self.board.reset()
         self.player_color = player_color
-        self.player = torch.load(BEST_PATH).to(DEVICE)
+        self.player = Player().to(DEVICE)
+        self.player.load_state_dict(torch.load(BEST_PATH))
         self.player.eval()
         self.done = False
         self.mcts = MCTS()
+        self.mcts.TuliSharmaOptimization(self.player, self.board, True)
+        self.mcts.runSims(self.board, self.player, 100, 3)
 
     def playOnce(self, other_pass):
         if other_pass and self.board.get_winner() + 1 == self.board.player_color:
             action = 169
         else: 
-            action, action_scores = self.mcts.play(self.board, self.player, True)
+            action, action_scores = self.mcts.play(self.board, self.player, True, mcts_time=4)
         self.state, _, self.done = self.board.step(action)
         return action
 
     def get_action(self, cur_state, opponent_action):
+        startTime = time.time()
         # print('--------------START--------------')
         if opponent_action != -1:
             # print("opponent_action ", opponent_action)
@@ -37,5 +41,5 @@ class AlphaGoPlayer():
         action = self.playOnce(opponent_action == 169)
         # print("my action ", action)
         # self.board.render()
-        # print('-------------- END --------------')
+        print('-------------- END --------------', time.time() - startTime, action)
         return action

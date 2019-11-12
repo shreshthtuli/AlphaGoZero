@@ -68,6 +68,7 @@ class RunMatches():
             tmp_match = importlib.import_module('modules.tmp_match_' + str(self.player1) + '_' + str(self.player2) + '_' + str(match_num))
             match = tmp_match.SingleMatch(self.board_size, self.komi, match_folder)
             winner, final_score = match.run_match()
+            print(winner, final_score)
 
 
 t = Tournament([1,5], 1, 13, 7.5)

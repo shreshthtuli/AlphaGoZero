@@ -5,6 +5,9 @@ nmc = multiprocessing.cpu_count()
 # Number of cores
 NUM_CORES = 1
 
+# MCTS TIME
+MCTS_TIME = 3
+
 # Size of Go Board
 BOARD_SIZE = 13
 
@@ -38,7 +41,7 @@ NOPASS_MULTPLR = 0.3
 C_PUCT = 0.2
 
 # Path of best model
-BEST_PATH = "bestModel.pth"
+BEST_PATH = "./utils/bestModel.pth"
 
 # Path of current model
 CUR_PATH = "/scratch/cse/btech/cs1160311/curModel_200.pth"
@@ -58,7 +61,7 @@ if NUM_CORES < 6:
 	TOTAL_GAMES = 20000 # 500k
 
 	# Number of MCTS simulations
-	MCTS_SIMS = 10 # 1600
+	MCTS_SIMS = 1000 # 1600
 
 	# milestones for changing learning rate
 	MILESTONES = [200, 300] # 400, 600
