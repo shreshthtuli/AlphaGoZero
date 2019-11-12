@@ -1,11 +1,11 @@
 import numpy as np
-from utils.constants import *
-from utils.go import GoEnv as Board
+from utils_5.constants import *
+from utils_5.go import GoEnv as Board
 import pandas as pd
-from utils.mcts import MCTS
+from utils_5.mcts import MCTS
 from sys import maxsize
 import time 
-from utils.agent import Player
+from utils_5.agent import Player
 
 class AlphaGoPlayer():
     def __init__(self, init_state, seed, player_color):
@@ -18,13 +18,13 @@ class AlphaGoPlayer():
         self.done = False
         self.mcts = MCTS()
         self.mcts.TuliSharmaOptimization(self.player, self.board, True)
-        self.mcts.runSims(self.board, self.player, 100, 3)
+        # self.mcts.runSims(self.board, self.player, 100, 3)
 
     def playOnce(self, other_pass):
         if other_pass and self.board.get_winner() + 1 == self.board.player_color:
             action = 169
         else: 
-            action, action_scores = self.mcts.play(self.board, self.player, True, mcts_time=4)
+            action, action_scores = self.mcts.play(self.board, self.player, True, mcts_time=4.6)
         self.state, _, self.done = self.board.step(action)
         return action
 

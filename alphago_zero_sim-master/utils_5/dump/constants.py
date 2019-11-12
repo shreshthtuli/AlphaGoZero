@@ -3,10 +3,7 @@ import multiprocessing
 nmc = multiprocessing.cpu_count()
 
 # Number of cores
-NUM_CORES = 1
-
-# MCTS TIME
-MCTS_TIME = 3
+NUM_CORES = 4
 
 # Size of Go Board
 BOARD_SIZE = 13
@@ -41,7 +38,7 @@ NOPASS_MULTPLR = 0.3
 C_PUCT = 0.2
 
 # Path of best model
-BEST_PATH = "./utils/bestModel.pth"
+BEST_PATH = "bestModel.pth"
 
 # Path of current model
 CUR_PATH = "/scratch/cse/btech/cs1160311/curModel_200.pth"
@@ -49,7 +46,7 @@ CUR_PATH = "/scratch/cse/btech/cs1160311/curModel_200.pth"
 # Threshold to overwrite best player
 EVAL_THRESH = 0.5
 
-if NUM_CORES < 6:
+if NUM_CORES < 4:
 	# Number of filters
 	FILTERS = 128 # 256
 
@@ -61,7 +58,7 @@ if NUM_CORES < 6:
 	TOTAL_GAMES = 20000 # 500k
 
 	# Number of MCTS simulations
-	MCTS_SIMS = 1000 # 1600
+	MCTS_SIMS = 100000 # 1600
 
 	# milestones for changing learning rate
 	MILESTONES = [200, 300] # 400, 600
@@ -86,7 +83,7 @@ else:
 	TOTAL_GAMES = 50000 # 500k
 
 	# Number of MCTS simulations
-	MCTS_SIMS = 200 # 1600
+	MCTS_SIMS = 20000 # 1600
 
 	# milestones for changing learning rate
 	MILESTONES = [400, 600] # 400, 600

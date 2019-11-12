@@ -1,11 +1,11 @@
 import numpy as np
-from utils.constants import *
-from utils.go import GoEnv as Board
+from utils_5.constants import *
+from utils_5.go import GoEnv as Board
 import pandas as pd
-from utils.mcts import MCTS
+from utils_5.mcts import MCTS
 from sys import maxsize
 import time 
-from utils.agent import Player
+from utils_5.agent import Player
 
 model = torch.load(BEST_PATH)
 
