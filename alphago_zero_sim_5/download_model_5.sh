@@ -1,1 +1,1 @@
-wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=FILEID' -O model_5/bestModel.pth
+wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1dtJyhNQJHdYt9vEhUQHDWQFTJz2UgHD-' -O model_5/bestModel.pth

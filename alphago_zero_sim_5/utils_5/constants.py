@@ -41,7 +41,7 @@ NOPASS_MULTPLR = 0.3
 C_PUCT = 0.2
 
 # Path of best model
-BEST_PATH = "./utils/bestModel.pth"
+BEST_PATH = "./model_5/bestModel.pth"
 
 # Path of current model
 CUR_PATH = "/scratch/cse/btech/cs1160311/curModel_200.pth"
