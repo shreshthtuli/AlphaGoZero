@@ -131,7 +131,10 @@ class MCTS():
 
 	def runSims(self, board, player, moveno=100):
 		#selectTime, expandTime, backupTime = 0, 0, 0
+		startTime = time.time()
 		for i in range(MCTS_SIMS):
+			if time.time() - startTime > 4:
+				break
 			# t1 = time.time()
 			boardCopy = deepcopy(board)
 			current_node = self.root

@@ -12,7 +12,7 @@ if argv[2] == 'manual':
 	EVAL_GAMES = 1
 else:
 	evaluators = [Game(None, mctsEnable=True) for c in range(NUM_CORES)]
-	EVAL_GAMES = 20
+	EVAL_GAMES = 10
 
 def getRes(evaluator, opf):
 	wins = 0
@@ -40,7 +40,7 @@ for a in argv[1:]:
 	if a == 'random':
 		models.append(Player().to(DEVICE))
 	else:
-		models.append(torch.load(a))
+		models.append(torch.load(a).to(DEVICE))
 
 if argv[2] == 'manual':
 	models.append(Player().to(DEVICE))

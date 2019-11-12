@@ -12,7 +12,8 @@ class AlphaGoPlayer():
         self.board = Board("black", BOARD_SIZE)
         self.state = self.board.reset()
         self.player_color = player_color
-        self.player = torch.load(BEST_PATH)
+        self.player = torch.load(BEST_PATH).to(DEVICE)
+        self.player.eval()
         self.done = False
         self.mcts = MCTS()
 
