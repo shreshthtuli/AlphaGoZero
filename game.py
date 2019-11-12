@@ -43,8 +43,13 @@ class Game:
 		x = torch.tensor(x, dtype=torch.float, device=DEVICE)
 		return x
 
-	def playOnce(self, state, player, other_pass, competitive=False, moveno=100):
+	def playOnce(self, state, player, other_pass, competitive=False, moveno=100, random=False):
 		if self.mctsEnable:
+			if random:
+				action = np.random.choice(self.board.get_legal_moves())
+				self.mcts.advance(action)
+				state, reward, done = self.board.step(action)
+				return state, reward, done, action, 0
 			if competitive and other_pass and self.board.get_winner() + 1 == self.board.player_color:
 				action = 169; action_scores = np.zeros(170); action_scores[-1] = 1
 			else: 
@@ -69,7 +74,7 @@ class Game:
 		self.board.render()
 		return state, reward, done, action, 0
 
-	def play(self, opFirst=False, movelimit=MOVE_LIMIT):
+	def play(self, opFirst=False, movelimit=MOVE_LIMIT, random=False):
 		done = False
 		state = self.board.reset()
 		if self.mctsEnable:
@@ -84,13 +89,13 @@ class Game:
 		ct = 0
 		if opFirst:
 			state, reward, done, action, _ = self.playOnce(state, \
-                    self.opponent, action == 169, competitive=True, moveno=ct) if not self.manual else self.manualMove()
+                    self.opponent, action == 169, competitive=True, moveno=ct, random=random) if not self.manual else self.manualMove()
 		while not done and ct < movelimit:
 			if self.opponent:
 				state, reward, done, action, _ = self.playOnce(state, \
                     self.player, action == 169, competitive=True, moveno=ct)
 				state, reward, done, action, _ = self.playOnce(state, \
-                    self.opponent, action == 169, competitive=True, moveno=ct) if not self.manual else self.manualMove()
+                    self.opponent, action == 169, competitive=True, moveno=ct, random=random) if not self.manual else self.manualMove()
 			else:
 				new_state, reward, done, action, action_scores = self.playOnce(state, self.player, action == 169, moveno=ct)
 				datasetStates.append([state])

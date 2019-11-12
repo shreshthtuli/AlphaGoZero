@@ -12,12 +12,12 @@ if argv[2] == 'manual':
 	EVAL_GAMES = 1
 else:
 	evaluators = [Game(None, mctsEnable=True) for c in range(NUM_CORES)]
-	EVAL_GAMES = 10
+	EVAL_GAMES = 8
 
 def getRes(evaluator, opf):
 	wins = 0
 	for i in range(int(EVAL_GAMES/NUM_CORES)):
-		wins += evaluator.play(opFirst = opf)
+		wins += evaluator.play(opFirst = opf, random=True)
 	return wins
 
 def eval(model, othermodel):
@@ -44,4 +44,6 @@ for a in argv[1:]:
 
 if argv[2] == 'manual':
 	models.append(Player().to(DEVICE))
+models[0].eval()
+models[1].eval()
 eval(models[0], models[1])
