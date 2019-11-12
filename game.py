@@ -45,11 +45,6 @@ class Game:
 
 	def playOnce(self, state, player, other_pass, competitive=False, moveno=100, random=False):
 		if self.mctsEnable:
-			if random:
-				action = np.random.choice(self.board.get_legal_moves())
-				self.mcts.advance(action)
-				state, reward, done = self.board.step(action)
-				return state, reward, done, action, 0
 			if competitive and other_pass and self.board.get_winner() + 1 == self.board.player_color:
 				action = 169; action_scores = np.zeros(170); action_scores[-1] = 1
 			else: 
