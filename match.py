@@ -40,7 +40,7 @@ for a in argv[1:]:
 	if a == 'random':
 		models.append(Player().to(DEVICE))
 	else:
-		models.append(torch.load('bestModel-lr=' + a + '.pth'))
+		models.append(torch.load(a))
 
 if argv[2] == 'manual':
 	models.append(Player().to(DEVICE))
